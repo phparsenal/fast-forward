@@ -1,0 +1,30 @@
+{
+  "name": "nochso/cli-launch",
+  "description": "CLI Launch lets you remember, find and open your most used commands and folders.",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marcel Voigt",
+      "email": "mv@noch.so"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "nochso\\clilaunch\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/nochso/ORM2.git"
+    }, {
+      "type":"vcs",
+      "url": "https://github.com/nochso/php-cli-tools.git"
+    }
+  ],
+  "require": {
+    "nochso/ORM": "@dev",
+    "wp-cli/php-cli-tools": "@dev"
+  }
+}
