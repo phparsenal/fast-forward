@@ -1,5 +1,5 @@
 <?php
-use nochso\clilaunch\Model;
+use phparsenal\fastforward\Model;
 use nochso\ORM\DBA\DBA;
 
 $dir = dirname($_SERVER['PHP_SELF']);

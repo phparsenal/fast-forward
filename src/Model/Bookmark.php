@@ -1,5 +1,5 @@
 <?php
-namespace nochso\clilaunch\Model;
+namespace phparsenal\fastforward\Model;
 
 use nochso\ORM\Model;
 
