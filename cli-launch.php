@@ -1,24 +1,29 @@
 <?php
 use nochso\clilaunch\Model;
+use nochso\ORM\DBA\DBA;
 
 $dir = dirname($_SERVER['PHP_SELF']);
 chdir($dir);
 require 'vendor/autoload.php';
 
-
+// Prevent the previous command from being executed in case anything fails later on
 $batchPath = $dir . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
 file_put_contents($batchPath, '');
 
-
-\nochso\ORM\DBA\DBA::connect('sqlite:./db.sqlite', '', '');
+DBA::connect('sqlite:./db.sqlite', '', '');
+ensureSchema();
 
 if ($argc > 1) {
+    // ff add <args>
     if ($argv[1] == "add") {
         addBookmark(array_slice($argv, 2));
     } else {
+        // ff <search>
         runBookmark(array_slice($argv, 1));
     }
 } else {
+    // Show a list and let the user decide
+    // ff
     runBookmark(array());
 }
 
@@ -63,6 +68,13 @@ function runBookmark($args)
     }
 }
 
+
+/**
+ * @param $bookmarks
+ * @param array $args
+ * @return Model\Bookmark|null
+ * @throws Exception
+ */
 function selectBookmark($bookmarks, $args)
 {
     if (count($bookmarks) == 1) {
@@ -101,6 +113,61 @@ function selectBookmark($bookmarks, $args)
     return null;
 }
 
+/**
+ * Prepares the database when it is new.
+ */
+function ensureSchema()
+{
+    $sql = "SELECT * FROM sqlite_master";
+    $count = DBA::execute($sql)->rowCount();
+    if ($count !== 0) {
+        return;
+    }
+    echo "Database is new. Trying to set up database schema..\n";
+    $schemaPath = "asset/model.sql";
+    $exit = false;
+    if (!is_file($schemaPath)) {
+        echo "Schema file could not be found: $schemaPath\n";
+        echo "Please make sure that you have this file.\n";
+        echo "\nExiting.\n";
+        exit;
+    }
+    $schemaSql = file_get_contents($schemaPath);
+    if ($schemaSql === false) {
+        echo "Unable to read schema file: " . $schemaPath . "\n";
+        echo "\nExiting.\n";
+        exit;
+    }
+    $schemaSqlList = explode(';', $schemaSql);
+    $count = count($schemaSqlList);
+    foreach ($schemaSqlList as $key => $singleSql) {
+        echo "\r" . ($key + 1) . '/' . $count . ' ';
+        $statement = DBA::prepare($singleSql);
+        if ($statement->execute() === true) {
+            echo "Ok.";
+        } else {
+            echo "Failed:\n";
+            var_dump($statement->errorInfo());
+            echo "\nWhile trying to run:\n";
+            echo $singleSql . "\n";
+            echo "Exiting.\n";
+            exit;
+        }
+    }
+    echo "\nDatabase is ready.\n";
+}
+
+/**
+ * Converts an integer to its ordinal number
+ *
+ * <code>
+ * ordinal(1) === "1st"
+ * ordinal(32) === "32nd"
+ * </code>
+ *
+ * @param int $number
+ * @return string
+ */
 function ordinal($number)
 {
     $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
