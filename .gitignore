@@ -1,1 +1,5 @@
 .idea/
+vendor/
+db.sqlite
+cli-launch.temp.bat
+composer.lock
