@@ -118,8 +118,8 @@ function selectBookmark($bookmarks, $args)
  */
 function ensureSchema()
 {
-    $sql = "SELECT * FROM sqlite_master";
-    $count = DBA::execute($sql)->rowCount();
+    $sql = "SELECT COUNT(*) FROM sqlite_master";
+    $count = (int)DBA::execute($sql)->fetchColumn();
     if ($count !== 0) {
         return;
     }
