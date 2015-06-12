@@ -19,12 +19,15 @@ Please run an initial `composer install` in the project folder to fetch the exte
 
 
 ## Usage
-Add a new command in one line:
+Add a new command in one line:  
 `ff add <Shortcut> <Description> <Command>`
-Do the same interactively:
+
+Do the same interactively:  
 `ff add`
-List all available commands and execute the selection:
+
+List all available commands and execute the selection:  
 `ff`
-Look for _htd*_.
-If the only result is _htd_ it will be executed, otherwise all matches will be displayed.
+
+Search for _htd*_  
+If the only result is _htd_ it will be executed, otherwise all matches will be displayed first.  
 `ff htd`
