@@ -27,6 +27,9 @@ class Client
         $this->init();
     }
 
+    /**
+     * Get folder path and connect to the database
+     */
     private function init()
     {
         $this->folder = dirname($_SERVER['PHP_SELF']);
@@ -60,7 +63,6 @@ class Client
             // ff
             $this->runBookmark(array());
         }
-
     }
 
     public function addBookmark($args)
@@ -90,6 +92,9 @@ class Client
         Streams::out("New bookmark was saved: " . $bookmark->shortcut);
     }
 
+    /**
+     * @param $args
+     */
     public function runBookmark($args)
     {
         $query = Model\Bookmark::select();
@@ -104,7 +109,6 @@ class Client
         }
     }
 
-
     /**
      * @param $bookmarks
      * @param array $args
@@ -116,8 +120,10 @@ class Client
         if (count($bookmarks) == 1) {
             /** @var Model\Bookmark $bm */
             $bm = $bookmarks->current();
-            if ($bm->shortcut == $args[0]) {
-                return $bm;
+            if(isset($args[0])) {
+                if ($bm->shortcut == $args[0]) {
+                    return $bm;
+                }
             }
         }
 
@@ -134,9 +140,9 @@ class Client
         $table->setRows($rows);
         $r = new \cli\table\Ascii();
         $r->setCharacters(array(
-            'corner' => '',
-            'line' => '',
-            'border' => ' ',
+            'corner'  => '',
+            'line'    => '',
+            'border'  => '',
             'padding' => '',
         ));
         $table->setRenderer($r);
@@ -159,19 +165,19 @@ class Client
         if ($count !== 0) {
             return;
         }
-        echo "Database is new. Trying to set up database schema..\n";
+        Streams::out("Database is new. Trying to set up database schema..\n");
         $schemaPath = "asset/model.sql";
         $exit = false;
         if (!is_file($schemaPath)) {
-            echo "Schema file could not be found: $schemaPath\n";
-            echo "Please make sure that you have this file.\n";
-            echo "\nExiting.\n";
+            Streams::out("Schema file could not be found: $schemaPath\n");
+            Streams::out("Please make sure that you have this file.\n");
+            Streams::out("\nExiting.\n");
             exit;
         }
         $schemaSql = file_get_contents($schemaPath);
         if ($schemaSql === false) {
-            echo "Unable to read schema file: " . $schemaPath . "\n";
-            echo "\nExiting.\n";
+            Streams::out("Unable to read schema file: " . $schemaPath . "\n");
+            Streams::out("\nExiting.\n");
             exit;
         }
         $schemaSqlList = explode(';', $schemaSql);
@@ -180,17 +186,17 @@ class Client
             echo "\r" . ($key + 1) . '/' . $count . ' ';
             $statement = DBA::prepare($singleSql);
             if ($statement->execute() === true) {
-                echo "Ok.";
+                Streams::out("Ok.");
             } else {
-                echo "Failed:\n";
+                Streams::out("Failed:\n");
                 var_dump($statement->errorInfo());
-                echo "\nWhile trying to run:\n";
-                echo $singleSql . "\n";
-                echo "Exiting.\n";
+                Streams::out("\nWhile trying to run:\n");
+                Streams::out($singleSql . "\n");
+                Streams::out("Exiting.\n");
                 exit;
             }
         }
-        echo "\nDatabase is ready.\n";
+        Streams::out("\nDatabase is ready.\n");
     }
 
     /**
