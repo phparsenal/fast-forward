@@ -7,8 +7,6 @@ use phparsenal\fastforward\Client;
 
 class Bookmark extends Model
 {
-    // This needs renamed, don't use _
-    // http://www.php-fig.org/psr/psr-2/ 4.2
     protected static $_tableName = 'bookmark';
 
     /**
