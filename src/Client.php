@@ -1,5 +1,4 @@
 <?php
-
 namespace phparsenal\fastforward;
 
 use cli\Streams;
@@ -39,7 +38,7 @@ class Client
         $this->batchPath = $this->folder . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
         file_put_contents($this->batchPath, '');
 
-        DBA::connect('sqlite:./db.sqlite', '', '');
+        DBA::connect('sqlite:' . dirname(dirname(__FILE__)) . '/db.sqlite', '', '');
         $this->ensureSchema();
     }
 
@@ -212,11 +211,15 @@ class Client
      */
     public function ordinal($number)
     {
-        $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
-        if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
-            return $number . 'th';
+        if(is_int($number)) {
+            $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
+            if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
+                return $number . 'th';
+            } else {
+                return $number . $ends[$number % 10];
+            }
         } else {
-            return $number . $ends[$number % 10];
+            return false;
         }
     }
 
