@@ -2,6 +2,7 @@
 namespace phparsenal\fastforward\Model;
 
 use nochso\ORM\Model;
+use phparsenal\fastforward\Client;
 
 class Bookmark extends Model
 {
@@ -56,13 +57,15 @@ class Bookmark extends Model
         parent::save();
     }
 
-    public function run()
+    /**
+     * @param Client $client
+     */
+    public function run($client)
     {
-        global $batchPath;
-        file_put_contents($batchPath, $this->command);
+        file_put_contents($client->getBatchPath(), $this->command);
         $this->hit_count++;
         $this->save();
-        echo "Running '" . $this->shortcut . "' for the " . ordinal($this->hit_count) . " time.\n";
+        echo "Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.\n";
         echo $this->command . "\n";
     }
 }
