@@ -1,11 +1,14 @@
 <?php
 namespace phparsenal\fastforward\Model;
 
+use cli\Streams;
 use nochso\ORM\Model;
 use phparsenal\fastforward\Client;
 
 class Bookmark extends Model
 {
+    // This needs renamed, don't use _
+    // http://www.php-fig.org/psr/psr-2/ 4.2
     protected static $_tableName = 'bookmark';
 
     /**
@@ -65,7 +68,7 @@ class Bookmark extends Model
         file_put_contents($client->getBatchPath(), $this->command);
         $this->hit_count++;
         $this->save();
-        echo "Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.\n";
-        echo $this->command . "\n";
+        Streams::out("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.\n");
+        Streams::out($this->command . "\n");
     }
 }
