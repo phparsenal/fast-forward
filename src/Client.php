@@ -31,14 +31,13 @@ class Client
      */
     private function init()
     {
-        $this->folder = dirname($_SERVER['PHP_SELF']);
+        $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
 
         // Prevent the previous command from being executed in case anything fails later on
         $this->batchPath = $this->folder . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
         file_put_contents($this->batchPath, '');
-
-        DBA::connect('sqlite:' . dirname(dirname(__FILE__)) . '/db.sqlite', '', '');
+        DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
         $this->ensureSchema();
     }
 
