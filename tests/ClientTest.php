@@ -45,4 +45,23 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         echo $result;
         $this->assertFalse($result);
     }
+
+    /**
+     * Test getBatchPath length
+     */
+    public function testGetBatchPathLength()
+    {
+        $result = $this->client->getBatchPath();
+        $len = strlen($result);
+        $this->assertGreaterThan(0, $len);
+    }
+
+    /**
+     * Test getBatchPath type
+     */
+    public function testGetBatchPatchType()
+    {
+        $result = $this->client->getBatchPath();
+        $this->assertInternalType('string', $result);
+    }
 }
