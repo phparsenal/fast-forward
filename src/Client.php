@@ -129,7 +129,8 @@ class Client
         $map = array();
         $i = 0;
         $table = new \cli\Table();
-        $table->setHeaders(['#', 'Shortcut', 'Description', 'Command', 'Hits']);
+        $headers = array('#', 'Shortcut', 'Description', 'Command', 'Hits');
+        $table->setHeaders($headers);
         $rows = array();
         foreach ($bookmarks as $id => $bm) {
             $map[$i] = $id;
