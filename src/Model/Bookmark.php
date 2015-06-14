@@ -63,10 +63,13 @@ class Bookmark extends Model
      */
     public function run($client)
     {
-        if (php_uname('s') === 'Linux') {
+        $os = php_uname('s');
+        if ($os === 'Linux') {
             echo "\ncmd:" . $this->command . "\n";
-        } else {
+        } elseif (strpos($os, 'Windows') === 0) {
             file_put_contents($client->getBatchPath(), $this->command);
+        } else {
+            throw new Exception('Running commands on ' . $os . ' is currently not supported.');
         }
         $this->hit_count++;
         $this->save();
