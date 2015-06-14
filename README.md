@@ -1,4 +1,7 @@
 # fast-forward
+
+[![Build Status](https://travis-ci.org/phparsenal/fast-forward.svg?branch=master)](https://travis-ci.org/phparsenal/fast-forward)
+
 Just throwing out some code, feel free to gut this.
 
 The PHP script will write the command you want to run in the batch file and afterwards it will be run.  
