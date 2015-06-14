@@ -139,9 +139,9 @@ class Client
         $table->setRows($rows);
         $r = new \cli\table\Ascii();
         $r->setCharacters(array(
-            'corner'  => '',
-            'line'    => '',
-            'border'  => '',
+            'corner' => '',
+            'line' => '',
+            'border' => ' ',
             'padding' => '',
         ));
         $table->setRenderer($r);
