@@ -14,21 +14,11 @@
       "phparsenal\\fastforward\\": "src/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/nochso/ORM2.git"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/nochso/php-cli-tools.git"
-    }
-  ],
   "require": {
-    "nochso/ORM": "~1.3",
-    "wp-cli/php-cli-tools": "@dev"
+    "nochso/orm": "~1.3",
+    "wp-cli/php-cli-tools": "~0.10.4"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.7"
+    "phpunit/phpunit": "4.7.*"
   }
 }
