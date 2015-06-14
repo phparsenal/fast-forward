@@ -3,12 +3,22 @@ namespace phparsenal\fastforward\Model;
 
 use cli\Streams;
 use nochso\ORM\Model;
+use nochso\ORM\Relation;
 use phparsenal\fastforward\Client;
 
 class Bookmark extends Model
 {
     protected static $_tableName = 'bookmark';
+    protected static $_relations = array(
+        'bookmarkType' => array(Relation::HAS_ONE, 'phparsenal\fastforward\Model\BookmarkType')
+    );
 
+    /**
+     * @var Relation|BookmarkType
+     */
+    public $bookmarkType;
+
+    #region Table columns
     /**
      * Primary key of the bookmark
      *
@@ -22,30 +32,40 @@ class Bookmark extends Model
      * @var string
      */
     public $shortcut = '';
+
     /**
      * Describes what the bookmark is or does
      *
      * @var string
      */
     public $description = '';
+
     /**
      * The command to be execute
      *
      * @var string
      */
     public $command = '';
+
     /**
      * The amount of times this bookmark was opened
      *
      * @var int
      */
     public $hit_count = 0;
+
     /**
      * UTC timestamp
      *
      * @var int
      */
     public $ts_created;
+
+    /**
+     * @var int
+     */
+    public $bookmark_type_id;
+    #endregion
 
     /**
      * Ensure ts_created is set
