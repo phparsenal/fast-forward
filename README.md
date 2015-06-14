@@ -11,12 +11,16 @@ I could not find another way to `cd anotherdir` within PHP. chdir() didn't stick
 ## Setup
 Please run an initial `composer install` in the project folder to fetch the external libraries (a simple ORM and a CLI utility).
 
+Afterwards make the `ff` command available globally:
+
 ### Windows
 1. Edit the file `ff.bat` and change `ffpath` to the folder you put fast-forward in.
 2. Copy `ff.bat` to a global path so that it is always available on the command line.
 
 ### Linux
-
+1. Edit the file `ff.sh` and change `ffpath` to the folder you put fast-forward in.
+2. Add this to your `~/.bashrc` or `~/.bash_aliases`  
+    `alias ff='. /path/to/fast-forward/ff.sh'`
 
 ### Mac
 

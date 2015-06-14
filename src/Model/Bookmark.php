@@ -63,7 +63,11 @@ class Bookmark extends Model
      */
     public function run($client)
     {
-        file_put_contents($client->getBatchPath(), $this->command);
+        if (php_uname('s') === 'Linux') {
+            echo "\ncmd:" . $this->command . "\n";
+        } else {
+            file_put_contents($client->getBatchPath(), $this->command);
+        }
         $this->hit_count++;
         $this->save();
         Streams::out("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.\n");
