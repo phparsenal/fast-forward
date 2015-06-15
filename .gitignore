@@ -4,3 +4,4 @@ db.sqlite
 cli-launch.temp.bat
 cli-launch.tmp
 composer.lock
+*.sublime-*
