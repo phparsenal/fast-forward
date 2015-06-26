@@ -3,20 +3,11 @@ namespace phparsenal\fastforward\Model;
 
 use cli\Streams;
 use nochso\ORM\Model;
-use nochso\ORM\Relation;
 use phparsenal\fastforward\Client;
 
 class Bookmark extends Model
 {
     protected static $_tableName = 'bookmark';
-    protected static $_relations = array(
-        'bookmarkType' => array(Relation::HAS_ONE, 'phparsenal\fastforward\Model\BookmarkType')
-    );
-
-    /**
-     * @var Relation|BookmarkType
-     */
-    public $bookmarkType;
 
     #region Table columns
     /**
@@ -60,11 +51,6 @@ class Bookmark extends Model
      * @var int
      */
     public $ts_created;
-
-    /**
-     * @var int
-     */
-    public $bookmark_type_id;
     #endregion
 
     /**
