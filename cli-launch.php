@@ -1,5 +1,5 @@
 <?php
-require 'vendor/autoload.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
 
 // Replace the path to *this* PHP file with the alias because the usage summary
 // relies on this.
