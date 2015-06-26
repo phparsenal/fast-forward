@@ -30,8 +30,19 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testOrdinalNumber()
     {
-        $result = $this->client->ordinal(3);
-        $this->assertInternalType('string', $result);
+        $expected = array(
+            "1st" => 1,
+            "2nd" => 2,
+            "3rd" => 3,
+            "4th" => 4,
+            "11th" => 11,
+            "21st" => 21
+        );
+        foreach ($expected as $exp => $value) {
+            $result = $this->client->ordinal($value);
+            $this->assertEquals($exp, $result, $value);
+            $this->assertInternalType('string', $result);
+        }
     }
 
     /**
