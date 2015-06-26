@@ -96,7 +96,6 @@ class Client
         }
         Streams::out("Database is new. Trying to set up database schema..\n");
         $schemaPath = "asset/model.sql";
-        $exit = false;
         if (!is_file($schemaPath)) {
             Streams::out("Schema file could not be found: $schemaPath\n");
             Streams::out("Please make sure that you have this file.\n");
