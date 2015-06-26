@@ -2,17 +2,27 @@
 
 namespace phparsenal\fastforward\Command;
 
+use League\CLImate\CLImate;
+
 abstract class AbstractCommand implements CommandInterface
 {
     /**
      * @var \League\CLImate\CLImate
      */
-    private $cli;
+    protected $cli;
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
+
+    /**
+     * @param CLImate $cli
+     */
+    public function __construct(CLImate $cli)
+    {
+        $this->cli = $cli;
+    }
 
     /**
      * This name is used for invoking the command.
