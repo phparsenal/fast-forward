@@ -2,7 +2,11 @@
 namespace phparsenal\fastforward;
 
 use cli\Streams;
+use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
+use phparsenal\fastforward\Command\Add;
+use phparsenal\fastforward\Command\CommandInterface;
+use phparsenal\fastforward\Command\Run;
 
 class Client
 {
@@ -21,6 +25,11 @@ class Client
      */
     private $args;
 
+    /**
+     * @var CLImate
+     */
+    private $cli;
+
     function __construct()
     {
         $this->init();
@@ -31,6 +40,7 @@ class Client
      */
     private function init()
     {
+        $this->cli = new CLImate();
         $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
 
@@ -48,19 +58,45 @@ class Client
     {
         $this->args = $argv;
 
+        // Build a list of available commands
+        $run = new Run($this->cli);
+        /** @var CommandInterface[] $commands */
+        $commands = array(
+            new Add($this->cli),
+            $run
+        );
+
+        // Look for a matching command
+        $commandFound = false;
         if (count($this->args) > 1) {
-            // ff add <args>
-            if ($this->args[1] == "add") {
-                $this->addBookmark(array_slice($this->args, 2));
-            } else {
-                // ff <search>
-                $this->runBookmark(array_slice($this->args, 1));
+            foreach ($commands as $command) {
+                if ($command->getName() === $this->args[1]) {
+                    //$command->run(array_slice($this->args, 1));
+                    $command->run($this->args);
+                    $commandFound = true;
+                    break;
+                }
             }
-        } else {
-            // Show a list and let the user decide
-            // ff
-            $this->runBookmark(array());
         }
+
+        // Otherwise run the default "run" command
+        if (!$commandFound) {
+            $run->run($this->args);
+        }
+
+//        if (count($this->args) > 1) {
+//            // ff add <args>
+//            if ($this->args[1] == "add") {
+//                $this->addBookmark(array_slice($this->args, 2));
+//            } else {
+//                // ff <search>
+//                $this->runBookmark(array_slice($this->args, 1));
+//            }
+//        } else {
+//            // Show a list and let the user decide
+//            // ff
+//            $this->runBookmark(array());
+//        }
     }
 
     public function addBookmark($args)
@@ -118,7 +154,7 @@ class Client
         if (count($bookmarks) == 1) {
             /** @var Model\Bookmark $bm */
             $bm = $bookmarks->current();
-            if(isset($args[0])) {
+            if (isset($args[0])) {
                 if ($bm->shortcut == $args[0]) {
                     return $bm;
                 }
@@ -211,7 +247,7 @@ class Client
      */
     public function ordinal($number)
     {
-        if(is_int($number)) {
+        if (is_int($number)) {
             $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
             if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
                 return $number . 'th';

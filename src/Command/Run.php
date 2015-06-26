@@ -5,9 +5,12 @@ namespace phparsenal\fastforward\Command;
 
 class Run extends AbstractCommand implements CommandInterface
 {
-    private $name = 'run';
+    protected $name = 'run';
 
-    public function run()
+    /**
+     * @param array $argv
+     */
+    public function run($argv)
     {
         // TODO: Implement run() method.
     }

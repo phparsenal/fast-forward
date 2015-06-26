@@ -5,43 +5,60 @@ namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Bookmark;
 
-class Add implements CommandInterface
+class Add extends AbstractCommand implements CommandInterface
 {
-    private $name = 'add';
+    protected $name = 'add';
 
     /**
-     * @return string
+     * @param array $argv
      */
-    public function getName()
+    public function run($argv)
     {
-        return $this->name;
+        $this->prepareArguments();
+
+        try {
+            $this->cli->arguments->parse();
+        } catch (\Exception $e) {
+            $this->cli->error($e->getMessage());
+            $this->cli->out('');
+            $this->cli->arguments->usage($this->cli, $argv);
+            return;
+        }
+        $this->addCommand();
     }
 
-    public function run()
+    private function prepareArguments()
     {
+        $this->cli->arguments->add(
+            array(
+                'cmd' => array(
+                    'prefix' => 'c',
+                    'description' => 'Command to be saved',
+                    'required' => true
+                ),
+                'desc' => array(
+                    'prefix' => 'd',
+                    'description' => 'Short description of the command'
+                ),
+                'shortcut' => array(
+                    'prefix' => 's',
+                    'description' => 'Shortcut or alias used for searching',
+                    'required' => true
+                )
+            )
+        );
+    }
+
+    private function addCommand()
+    {
+        $args = $this->cli->arguments;
         $bookmark = new Bookmark();
-        $count = count($args);
-        // Get as much as you can
-        switch ($count) {
-            case 3:
-                $bookmark->command = $args[2];
-            case 2:
-                $bookmark->description = $args[1];
-            case 1:
-                $bookmark->shortcut = $args[0];
-        }
-
-        // Ask for what's left
-        switch ($count) {
-            case 0:
-                $bookmark->shortcut = Streams::prompt("Shortcut for easy searching");
-            case 1:
-                $bookmark->description = Streams::prompt("The description of the command");
-            case 2:
-                $bookmark->command = Streams::prompt("Command to be executed");
-        }
+        $bookmark->command = $args->get('cmd');
+        $bookmark->description = $args->get('desc');
+        $bookmark->shortcut = $args->get('shortcut');
         $bookmark->save();
-        Streams::out("New bookmark was saved: " . $bookmark->shortcut);
+        $this->cli->out("New bookmark was saved: " . $bookmark->shortcut);
     }
+
 
 }

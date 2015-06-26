@@ -10,5 +10,8 @@ interface CommandInterface
      */
     public function getName();
 
-    public function run();
+    /**
+     * @param array $argv
+     */
+    public function run($argv);
 }
