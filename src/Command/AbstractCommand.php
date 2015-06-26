@@ -3,9 +3,15 @@
 namespace phparsenal\fastforward\Command;
 
 use League\CLImate\CLImate;
+use phparsenal\fastforward\Client;
 
 abstract class AbstractCommand implements CommandInterface
 {
+    /**
+     * @var Client
+     */
+    protected $client;
+
     /**
      * @var \League\CLImate\CLImate
      */
@@ -19,9 +25,10 @@ abstract class AbstractCommand implements CommandInterface
     /**
      * @param CLImate $cli
      */
-    public function __construct(CLImate $cli)
+    public function __construct(Client $client)
     {
-        $this->cli = $cli;
+        $this->client = $client;
+        $this->cli = $this->client->getCLI();
     }
 
     /**

@@ -59,10 +59,10 @@ class Client
         $this->args = $argv;
 
         // Build a list of available commands
-        $run = new Run($this->cli);
+        $run = new Run($this);
         /** @var CommandInterface[] $commands */
         $commands = array(
-            new Add($this->cli),
+            new Add($this),
             $run
         );
 
@@ -71,7 +71,6 @@ class Client
         if (count($this->args) > 1) {
             foreach ($commands as $command) {
                 if ($command->getName() === $this->args[1]) {
-                    //$command->run(array_slice($this->args, 1));
                     $command->run($this->args);
                     $commandFound = true;
                     break;
@@ -83,111 +82,6 @@ class Client
         if (!$commandFound) {
             $run->run($this->args);
         }
-
-//        if (count($this->args) > 1) {
-//            // ff add <args>
-//            if ($this->args[1] == "add") {
-//                $this->addBookmark(array_slice($this->args, 2));
-//            } else {
-//                // ff <search>
-//                $this->runBookmark(array_slice($this->args, 1));
-//            }
-//        } else {
-//            // Show a list and let the user decide
-//            // ff
-//            $this->runBookmark(array());
-//        }
-    }
-
-    public function addBookmark($args)
-    {
-        $bookmark = new Model\Bookmark();
-        $count = count($args);
-        // Get as much as you can
-        switch ($count) {
-            case 3:
-                $bookmark->command = $args[2];
-            case 2:
-                $bookmark->description = $args[1];
-            case 1:
-                $bookmark->shortcut = $args[0];
-        }
-
-        // Ask for what's left
-        switch ($count) {
-            case 0:
-                $bookmark->shortcut = Streams::prompt("Shortcut for easy searching");
-            case 1:
-                $bookmark->description = Streams::prompt("The description of the command");
-            case 2:
-                $bookmark->command = Streams::prompt("Command to be executed");
-        }
-        $bookmark->save();
-        Streams::out("New bookmark was saved: " . $bookmark->shortcut);
-    }
-
-    /**
-     * @param $args
-     */
-    public function runBookmark($args)
-    {
-        $query = Model\Bookmark::select();
-        foreach ($args as $arg) {
-            $query->like('shortcut', $arg . '%');
-        }
-        $query->orderDesc('hit_count');
-        $bookmarks = $query->all();
-        $bm = $this->selectBookmark($bookmarks, $args);
-        if ($bm !== null) {
-            $bm->run($this);
-        }
-    }
-
-    /**
-     * @param $bookmarks
-     * @param array $args
-     * @return Model\Bookmark|null
-     * @throws Exception
-     */
-    public function selectBookmark($bookmarks, $args)
-    {
-        if (count($bookmarks) == 1) {
-            /** @var Model\Bookmark $bm */
-            $bm = $bookmarks->current();
-            if (isset($args[0])) {
-                if ($bm->shortcut == $args[0]) {
-                    return $bm;
-                }
-            }
-        }
-
-        $map = array();
-        $i = 0;
-        $table = new \cli\Table();
-        $headers = array('#', 'Shortcut', 'Description', 'Command', 'Hits');
-        $table->setHeaders($headers);
-        $rows = array();
-        foreach ($bookmarks as $id => $bm) {
-            $map[$i] = $id;
-            $rows[] = array($i, $bm->shortcut, $bm->description, $bm->command, $bm->hit_count);
-            $i++;
-        }
-        $table->setRows($rows);
-        $r = new \cli\table\Ascii();
-        $r->setCharacters(array(
-            'corner' => '',
-            'line' => '',
-            'border' => ' ',
-            'padding' => '',
-        ));
-        $table->setRenderer($r);
-        $table->display();
-        Streams::out("Which # do you want to run? ");
-        $num = Streams::input();
-        if (isset($map[$num])) {
-            return $bookmarks[$map[$num]];
-        }
-        return null;
     }
 
     /**
@@ -265,5 +159,13 @@ class Client
     public function getBatchPath()
     {
         return $this->batchPath;
+    }
+
+    /**
+     * @return CLImate
+     */
+    public function getCLI()
+    {
+        return $this->cli;
     }
 }
