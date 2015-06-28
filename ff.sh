@@ -1,7 +1,7 @@
 #!/bin/bash
-FFPATH="/home/amblin/dev/fast-forward/"
-FFPHP="${FFPATH}cli-launch.php"
-FFTMP="${FFPATH}cli-launch.tmp"
+FFPATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+FFPHP="${FFPATH}/cli-launch.php"
+FFTMP="${FFPATH}/cli-launch.tmp"
 
 # Run fast-forward and capture output in $FFTMP
 php $FFPHP "$@" | tee $FFTMP
