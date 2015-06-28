@@ -41,6 +41,7 @@ class Client
     private function init()
     {
         $this->cli = new CLImate();
+        $this->cli->description('fast-forward ' . FF_VERSION);
         $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
 
