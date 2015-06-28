@@ -1,7 +1,6 @@
 <?php
 namespace phparsenal\fastforward\Model;
 
-use cli\Streams;
 use nochso\ORM\Model;
 use phparsenal\fastforward\Client;
 use phparsenal\fastforward\OS;

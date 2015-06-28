@@ -2,8 +2,6 @@
 
 namespace phparsenal\fastforward\Command;
 
-
-use cli\Streams;
 use phparsenal\fastforward\Model\Bookmark;
 
 class Run extends AbstractCommand implements CommandInterface
@@ -53,7 +51,7 @@ class Run extends AbstractCommand implements CommandInterface
     /**
      * @param $bookmarks
      * @param $searchTerms
-     * @return null
+     * @return null|Bookmark
      * @throws \Exception
      */
     private function selectBookmark($bookmarks, $searchTerms)
@@ -70,27 +68,28 @@ class Run extends AbstractCommand implements CommandInterface
 
         $map = array();
         $i = 0;
-        $table = new \cli\Table();
-        $headers = array('#', 'Shortcut', 'Description', 'Command', 'Hits');
-        $table->setHeaders($headers);
         $rows = array();
+        $rePattern = "/(" . implode($searchTerms, '|') . ")/i";
+        // TODO Make highlighting mode configurable
+        $highlightMode = 'invert';
+        $reReplacement = "<$highlightMode>\\1</$highlightMode>";
         foreach ($bookmarks as $id => $bm) {
             $map[$i] = $id;
-            $rows[] = array($i, $bm->shortcut, $bm->description, $bm->command, $bm->hit_count);
+            $rows[] = array(
+                '#' => $i,
+                'Shortcut' => preg_replace($rePattern, $reReplacement, $bm->shortcut),
+                'Description' => $bm->description,
+                'Command' => $bm->command,
+                'Hits' => $bm->hit_count
+            );
             $i++;
         }
-        $table->setRows($rows);
-        $r = new \cli\table\Ascii();
-        $r->setCharacters(array(
-            'corner' => '',
-            'line' => '',
-            'border' => ' ',
-            'padding' => '',
-        ));
-        $table->setRenderer($r);
-        $table->display();
-        Streams::out("Which # do you want to run? ");
-        $num = Streams::input();
+        $this->client->getCLI()->table($rows);
+        $input = $this->client->getCLI()->input("Which # do you want to run?");
+        $input->accept(function ($response) use ($map) {
+            return isset($map[$response]);
+        });
+        $num = $input->prompt();
         if (isset($map[$num])) {
             return $bookmarks[$map[$num]];
         }

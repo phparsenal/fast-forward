@@ -1,7 +1,6 @@
 <?php
 namespace phparsenal\fastforward;
 
-use cli\Streams;
 use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\AbstractCommand;
@@ -10,6 +9,7 @@ use phparsenal\fastforward\Command\Run;
 
 class Client
 {
+    const FF_VERSION = '0.1';
     /**
      * @var string
      */
@@ -35,18 +35,13 @@ class Client
      */
     private $commands = array();
 
-    function __construct()
-    {
-        $this->init();
-    }
-
     /**
      * Get folder path and connect to the database
      */
-    private function init()
+    public function init()
     {
         $this->cli = new CLImate();
-        $this->cli->description('fast-forward ' . FF_VERSION);
+        $this->cli->description('fast-forward ' . self::FF_VERSION);
         if (OS::isType(OS::LINUX)) {
             $this->cli->forceAnsiOn();
         }
@@ -97,6 +92,8 @@ class Client
 
     /**
      * Prepares the database when it is new.
+     *
+     * Returns false when database is not usable.
      */
     public function ensureSchema()
     {
@@ -105,37 +102,32 @@ class Client
         if ($count !== 0) {
             return;
         }
-        Streams::out("Database is new. Trying to set up database schema..\n");
+        $cli = $this->getCLI();
+        $cli->out("Database is new. Trying to set up database schema.");
         $schemaPath = "asset/model.sql";
         if (!is_file($schemaPath)) {
-            Streams::out("Schema file could not be found: $schemaPath\n");
-            Streams::out("Please make sure that you have this file.\n");
-            Streams::out("\nExiting.\n");
-            exit;
+            throw new \Exception("Schema file could not be found: \"$schemaPath\"\nPlease make sure that you have this file.");
         }
         $schemaSql = file_get_contents($schemaPath);
         if ($schemaSql === false) {
-            Streams::out("Unable to read schema file: " . $schemaPath . "\n");
-            Streams::out("\nExiting.\n");
-            exit;
+            throw new \Exception('Unable to read schema file: "' . $schemaPath . '"');
         }
-        $schemaSqlList = explode(';', $schemaSql);
-        $count = count($schemaSqlList);
+        // Explode into single statements without empty strings
+        $schemaSqlList = array_filter(explode(';', $schemaSql), 'trim');
+        $progress = $cli->progress()->total(count($schemaSqlList));
+        $progress->current(0);
         foreach ($schemaSqlList as $key => $singleSql) {
-            echo "\r" . ($key + 1) . '/' . $count . ' ';
-            $statement = DBA::prepare($singleSql);
-            if ($statement->execute() === true) {
-                Streams::out("Ok.");
-            } else {
-                Streams::out("Failed:\n");
-                var_dump($statement->errorInfo());
-                Streams::out("\nWhile trying to run:\n");
-                Streams::out($singleSql . "\n");
-                Streams::out("Exiting.\n");
-                exit;
+            $singleSql = trim($singleSql);
+            try {
+                $statement = DBA::prepare($singleSql);
+                $statement->execute();
+            } catch (\PDOException $e) {
+                $msg = "SQL error: " . $e->getMessage() . "\nWhile trying to execute:\n$singleSql";
+                throw new \Exception($msg);
             }
+            $progress->current($key + 1);
         }
-        Streams::out("\nDatabase is ready.\n");
+        $cli->out("Database is ready.");
     }
 
     /**
