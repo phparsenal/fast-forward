@@ -54,7 +54,9 @@ class Add extends AbstractCommand implements CommandInterface
         $args = $this->cli->arguments;
         $bookmark = new Bookmark();
         $bookmark->command = $args->get('cmd');
-        $bookmark->description = $args->get('desc');
+        if ($args->defined('desc')) {
+            $bookmark->description = $args->get('desc');
+        }
         $bookmark->shortcut = $args->get('shortcut');
         $bookmark->save();
         $this->cli->out("New bookmark was saved: " . $bookmark->shortcut);
