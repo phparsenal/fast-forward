@@ -23,7 +23,7 @@ abstract class AbstractCommand implements CommandInterface
     protected $name;
 
     /**
-     * @param CLImate $cli
+     * @param Client $client
      */
     public function __construct(Client $client)
     {
@@ -40,6 +40,4 @@ abstract class AbstractCommand implements CommandInterface
     {
         return $this->name;
     }
-
-
 }

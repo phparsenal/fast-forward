@@ -2,7 +2,6 @@
 
 namespace phparsenal\fastforward;
 
-
 class OS
 {
     const LINUX = 1;

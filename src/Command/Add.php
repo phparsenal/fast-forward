@@ -2,7 +2,6 @@
 
 namespace phparsenal\fastforward\Command;
 
-
 use phparsenal\fastforward\Model\Bookmark;
 
 class Add extends AbstractCommand implements CommandInterface
@@ -59,8 +58,6 @@ class Add extends AbstractCommand implements CommandInterface
         }
         $bookmark->shortcut = $args->get('shortcut');
         $bookmark->save();
-        $this->cli->out("New bookmark was saved: " . $bookmark->shortcut);
+        $this->cli->info("New bookmark was saved: " . $bookmark->shortcut);
     }
-
-
 }

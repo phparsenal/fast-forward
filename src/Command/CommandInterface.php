@@ -2,7 +2,6 @@
 
 namespace phparsenal\fastforward\Command;
 
-
 interface CommandInterface
 {
     /**

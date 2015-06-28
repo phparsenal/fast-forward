@@ -81,7 +81,6 @@ class Client
                 $this->commands[$needle]->run($this->args);
                 $commandFound = true;
             }
-
         }
 
         // Otherwise run the default "run" command

@@ -1,7 +1,6 @@
 <?php
 namespace phparsenal\fastforward;
 
-
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -52,7 +51,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testOrdinalLetter()
     {
         $result = $this->client->ordinal('c');
-        echo $result;
         $this->assertFalse($result);
     }
 
