@@ -1,8 +1,6 @@
 # fast-forward
 
-[![Build Status](https://travis-ci.org/phparsenal/fast-forward.svg?branch=master)](https://travis-ci.org/phparsenal/fast-forward)
-
-Just throwing out some code, feel free to gut this.
+[![Build Status](https://travis-ci.org/phparsenal/fast-forward.svg?branch=master)](https://travis-ci.org/phparsenal/fast-forward) [![Dependency Status](https://www.versioneye.com/user/projects/558dbe19316338002400001c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/558dbe19316338002400001c)
 
 The PHP script will write the command you want to run in the batch file and afterwards it will be run.  
 I could not find another way to `cd anotherdir` within PHP. chdir() didn't stick on the cli after the script exits. If you do know a way on Windows, please let us know how or send a pull request!
