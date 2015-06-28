@@ -1,152 +1,171 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
-<svg width="62cm" height="33cm" viewBox="90 -221 1223 642" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="60cm" height="40cm" viewBox="118 89 1188 787" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <g>
-    <rect style="fill: #ffffff" x="550" y="101" width="761" height="318.612"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="550" y="101" width="761" height="318.612"/>
-    <rect style="fill: #ffffff" x="550" y="65" width="235" height="36"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="550" y="65" width="235" height="36"/>
-    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="552" y="80">&lt;&lt;namespace&gt;&gt;</text>
-    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="552" y="96">phparsenal\fastforward\Command</text>
+    <rect style="fill: #ffffff" x="543.638" y="126.638" width="761" height="318.612"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="543.638" y="126.638" width="761" height="318.612"/>
+    <rect style="fill: #ffffff" x="543.638" y="90.638" width="235" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="543.638" y="90.638" width="235" height="36"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="545.638" y="105.638">&lt;&lt;namespace&gt;&gt;</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="545.638" y="121.638">phparsenal\fastforward\Command</text>
   </g>
   <g>
-    <rect style="fill: #ffffff" x="243" y="248" width="75.25" height="28"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="243" y="248" width="75.25" height="28"/>
-    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="280.625" y="267">Runner</text>
-    <rect style="fill: #ffffff" x="243" y="276" width="75.25" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="243" y="276" width="75.25" height="8"/>
-    <rect style="fill: #ffffff" x="243" y="284" width="75.25" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="243" y="284" width="75.25" height="8"/>
+    <rect style="fill: #ffffff" x="262.634" y="240.456" width="62.65" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="262.634" y="240.456" width="62.65" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="293.959" y="259.456">Client</text>
+    <rect style="fill: #ffffff" x="262.634" y="268.456" width="62.65" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="262.634" y="268.456" width="62.65" height="8"/>
+    <rect style="fill: #ffffff" x="262.634" y="276.456" width="62.65" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="262.634" y="276.456" width="62.65" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="265.634" y="290.456">+run()</text>
   </g>
   <g>
-    <rect style="fill: #ffffff" x="597" y="329" width="45.3" height="28"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="597" y="329" width="45.3" height="28"/>
-    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="619.65" y="348">Add</text>
-    <rect style="fill: #ffffff" x="597" y="357" width="45.3" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="597" y="357" width="45.3" height="8"/>
-    <rect style="fill: #ffffff" x="597" y="365" width="45.3" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="597" y="365" width="45.3" height="8"/>
+    <rect style="fill: #ffffff" x="590.638" y="354.638" width="56.2" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="590.638" y="354.638" width="56.2" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="618.738" y="373.638">Add</text>
+    <rect style="fill: #ffffff" x="590.638" y="382.638" width="56.2" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="590.638" y="382.638" width="56.2" height="8"/>
+    <rect style="fill: #ffffff" x="590.638" y="390.638" width="56.2" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="590.638" y="390.638" width="56.2" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="593.638" y="404.638">+run()</text>
   </g>
   <g>
-    <rect style="fill: #ffffff" x="611" y="127.75" width="233.3" height="44"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="611" y="127.75" width="233.3" height="44"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="727.65" y="143.75">&lt;&lt;interface&gt;&gt;</text>
-    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="727.65" y="162.75">CommandInterface</text>
-    <rect style="fill: #ffffff" x="611" y="171.75" width="233.3" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="611" y="171.75" width="233.3" height="8"/>
-    <rect style="fill: #ffffff" x="611" y="179.75" width="233.3" height="52"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="611" y="179.75" width="233.3" height="52"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="614" y="193.75">+__construct(args:array)</text>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="614" y="209.75">+getAvailableOptions(): array</text>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="614" y="225.75">+run()</text>
+    <rect style="fill: #ffffff" x="604.638" y="153.388" width="233.3" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="604.638" y="153.388" width="233.3" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="721.288" y="169.388">&lt;&lt;interface&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="721.288" y="188.388">CommandInterface</text>
+    <rect style="fill: #ffffff" x="604.638" y="197.388" width="233.3" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="604.638" y="197.388" width="233.3" height="8"/>
+    <rect style="fill: #ffffff" x="604.638" y="205.388" width="233.3" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="604.638" y="205.388" width="233.3" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="607.638" y="219.388">+__construct(args:array)</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="607.638" y="235.388">+getAvailableOptions(): array</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="607.638" y="251.388">+run()</text>
   </g>
   <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="727.65,249.986 727.65,288.375 619.65,288.375 619.65,329 "/>
-    <polygon style="fill: #ffffff" points="735.65,249.986 727.65,233.986 719.65,249.986 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="735.65,249.986 727.65,233.986 719.65,249.986 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="721.288,275.624 721.288,314.013 618.738,314.013 618.738,354.638 "/>
+    <polygon style="fill: #ffffff" points="729.288,275.624 721.288,259.624 713.288,275.624 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="729.288,275.624 721.288,259.624 713.288,275.624 "/>
   </g>
   <g>
-    <rect style="fill: #ffffff" x="691.675" y="329" width="71.95" height="28"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="691.675" y="329" width="71.95" height="28"/>
-    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="727.65" y="348">Search</text>
-    <rect style="fill: #ffffff" x="691.675" y="357" width="71.95" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="691.675" y="357" width="71.95" height="8"/>
-    <rect style="fill: #ffffff" x="691.675" y="365" width="71.95" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="691.675" y="365" width="71.95" height="8"/>
+    <rect style="fill: #ffffff" x="685.314" y="354.638" width="71.95" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="685.314" y="354.638" width="71.95" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="721.289" y="373.638">Search</text>
+    <rect style="fill: #ffffff" x="685.314" y="382.638" width="71.95" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="685.314" y="382.638" width="71.95" height="8"/>
+    <rect style="fill: #ffffff" x="685.314" y="390.638" width="71.95" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="685.314" y="390.638" width="71.95" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="688.314" y="404.638">+run()</text>
   </g>
   <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="727.65,249.986 727.65,248.75 727.65,328 727.65,329 "/>
-    <polygon style="fill: #ffffff" points="735.65,249.986 727.65,233.986 719.65,249.986 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="735.65,249.986 727.65,233.986 719.65,249.986 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="721.288,275.624 721.288,314.013 721.289,314.013 721.289,354.638 "/>
+    <polygon style="fill: #ffffff" points="729.288,275.624 721.288,259.624 713.288,275.624 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="729.288,275.624 721.288,259.624 713.288,275.624 "/>
   </g>
-  <ellipse style="fill: #000000" cx="110" cy="270" rx="10" ry="10"/>
+  <ellipse style="fill: #000000" cx="143" cy="286" rx="10" ry="10"/>
   <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="121.005,270 131.005,270 231.991,270 237.518,270 "/>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="229.755,275 239.755,270 229.755,265 "/>
-  </g>
-  <g>
-    <rect style="fill: #ffffff" x="547" y="-183.75" width="616" height="228.612"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="547" y="-183.75" width="616" height="228.612"/>
-    <rect style="fill: #ffffff" x="547" y="-219.75" width="219.6" height="36"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="547" y="-219.75" width="219.6" height="36"/>
-    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="549" y="-204.75">&lt;&lt;namespace&gt;&gt;</text>
-    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="549" y="-188.75">phparsenal\fastforward\Model</text>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="154.005,286 208.32,286 208.32,286.456 258.162,286.456 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="250.398,291.456 260.398,286.456 250.398,281.456 "/>
   </g>
   <g>
-    <rect style="fill: #ffffff" x="588" y="-151" width="102.4" height="28"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="588" y="-151" width="102.4" height="28"/>
-    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="639.2" y="-132">Bookmark</text>
-    <rect style="fill: #ffffff" x="588" y="-123" width="102.4" height="100"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="588" y="-123" width="102.4" height="100"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="591" y="-109">+id</text>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="591" y="-93">+shortcut</text>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="591" y="-77">+description</text>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="591" y="-61">+command</text>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="591" y="-45">+hit_count</text>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="591" y="-29">+ts_created</text>
-    <rect style="fill: #ffffff" x="588" y="-23" width="102.4" height="20"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="588" y="-23" width="102.4" height="20"/>
-    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="591" y="-9">+run()</text>
+    <rect style="fill: #ffffff" x="547" y="499.67" width="662" height="375.193"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="547" y="499.67" width="662" height="375.193"/>
+    <rect style="fill: #ffffff" x="547" y="463.67" width="219.6" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="547" y="463.67" width="219.6" height="36"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="549" y="478.67">&lt;&lt;namespace&gt;&gt;</text>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="549" y="494.67">phparsenal\fastforward\Model</text>
   </g>
   <g>
-    <polygon style="fill: #ffffff" points="758,-147.138 1095.1,-147.138 1107.1,-135.138 1107.1,-1.13802 758,-1.13802 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="758,-147.138 1095.1,-147.138 1107.1,-135.138 1107.1,-1.13802 758,-1.13802 "/>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="1095.1,-147.138 1095.1,-135.138 1107.1,-135.138 "/>
-    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="765" y="-122.238">
-      <tspan x="765" y="-122.238">Data models for anything database related</tspan>
-      <tspan x="765" y="-106.238"></tspan>
-      <tspan x="765" y="-90.238">Bookmark extends my ORMs "Model" class.</tspan>
-      <tspan x="765" y="-74.238">Allows you to write to db tables like this:</tspan>
-      <tspan x="765" y="-58.238"></tspan>
-      <tspan x="765" y="-42.238">$bm = new Bookmark();</tspan>
-      <tspan x="765" y="-26.238">$bm-&gt;shortcut = "foo";</tspan>
-      <tspan x="765" y="-10.238">$bm-&gt;save();</tspan>
+    <rect style="fill: #ffffff" x="609.81" y="545.506" width="179.4" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="609.81" y="545.506" width="179.4" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="699.51" y="564.506">Bookmark</text>
+    <rect style="fill: #ffffff" x="609.81" y="573.506" width="179.4" height="116"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="609.81" y="573.506" width="179.4" height="116"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="587.506">+id</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="603.506">+shortcut</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="619.506">+description</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="635.506">+command</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="651.506">+hit_count</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="667.506">+ts_created</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="683.506">+bookmark_type_id: int</text>
+    <rect style="fill: #ffffff" x="609.81" y="689.506" width="179.4" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="609.81" y="689.506" width="179.4" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="612.81" y="703.506">+run()</text>
+  </g>
+  <g>
+    <polygon style="fill: #ffffff" points="820.716,548.372 1157.82,548.372 1169.82,560.372 1169.82,694.372 820.716,694.372 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="820.716,548.372 1157.82,548.372 1169.82,560.372 1169.82,694.372 820.716,694.372 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="1157.82,548.372 1157.82,560.372 1169.82,560.372 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="827.716" y="573.272">
+      <tspan x="827.716" y="573.272">Data models for anything database related</tspan>
+      <tspan x="827.716" y="589.272"></tspan>
+      <tspan x="827.716" y="605.272">Bookmark extends my ORMs "Model" class.</tspan>
+      <tspan x="827.716" y="621.272">Allows you to write to db tables like this:</tspan>
+      <tspan x="827.716" y="637.272"></tspan>
+      <tspan x="827.716" y="653.272">$bm = new Bookmark();</tspan>
+      <tspan x="827.716" y="669.272">$bm-&gt;shortcut = "foo";</tspan>
+      <tspan x="827.716" y="685.272">$bm-&gt;save();</tspan>
     </text>
   </g>
   <g>
-    <polygon style="fill: #ffffff" points="91,90 451.2,90 463.2,102 463.2,220 91,220 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="91,90 451.2,90 463.2,102 463.2,220 91,220 "/>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="451.2,90 451.2,102 463.2,102 "/>
-    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="98" y="114.9">
-      <tspan x="98" y="114.9">This class would be the entry point, much like</tspan>
-      <tspan x="98" y="130.9">cli-launch.php</tspan>
-      <tspan x="98" y="146.9">It takes the command line arguments and looks</tspan>
-      <tspan x="98" y="162.9">for a Command that will be able to understand</tspan>
-      <tspan x="98" y="178.9">the current request.</tspan>
-      <tspan x="98" y="194.9"></tspan>
-      <tspan x="98" y="210.9">(needs a better name)</tspan>
+    <polygon style="fill: #ffffff" points="119.539,103.358 479.739,103.358 491.739,115.358 491.739,201.358 119.539,201.358 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="119.539,103.358 479.739,103.358 491.739,115.358 491.739,201.358 119.539,201.358 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="479.739,103.358 479.739,115.358 491.739,115.358 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="126.539" y="128.258">
+      <tspan x="126.539" y="128.258">This class would be the entry point, much like</tspan>
+      <tspan x="126.539" y="144.258">cli-launch.php</tspan>
+      <tspan x="126.539" y="160.258">It takes the command line arguments and looks</tspan>
+      <tspan x="126.539" y="176.258">for a Command that will be able to understand</tspan>
+      <tspan x="126.539" y="192.258">the current request.</tspan>
     </text>
   </g>
   <g>
-    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="533" y1="260.43" x2="318.25" y2="262"/>
-    <polygon style="fill: #000000" points="533.037,265.43 549,260.313 532.964,255.43 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="533.037,265.43 549,260.313 532.964,255.43 "/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="526.638" y1="285.984" x2="325.284" y2="286.456"/>
+    <polygon style="fill: #000000" points="526.65,290.984 542.638,285.946 526.626,280.984 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="526.65,290.984 542.638,285.946 526.626,280.984 "/>
   </g>
   <g>
-    <polygon style="fill: #ffffff" points="864,130.612 1278.1,130.612 1290.1,142.612 1290.1,244.612 864,244.612 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="864,130.612 1278.1,130.612 1290.1,142.612 1290.1,244.612 864,244.612 "/>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="1278.1,130.612 1278.1,142.612 1290.1,142.612 "/>
-    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="871" y="155.512">
-      <tspan x="871" y="155.512">Each command implements a certain interface.</tspan>
-      <tspan x="871" y="171.512">That way "Runner" always knows how to run commands</tspan>
-      <tspan x="871" y="187.512">or can display what options a command supports.</tspan>
-      <tspan x="871" y="203.512"></tspan>
-      <tspan x="871" y="219.512">Note that by "command" I mean something our tool will</tspan>
-      <tspan x="871" y="235.512">understand. It's not a command the user has saved.</tspan>
+    <polygon style="fill: #ffffff" points="857.638,156.25 1271.74,156.25 1283.74,168.25 1283.74,270.25 857.638,270.25 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="857.638,156.25 1271.74,156.25 1283.74,168.25 1283.74,270.25 857.638,270.25 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" points="1271.74,156.25 1271.74,168.25 1283.74,168.25 "/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="864.638" y="181.15">
+      <tspan x="864.638" y="181.15">Each command implements a certain interface.</tspan>
+      <tspan x="864.638" y="197.15">That way "Runner" always knows how to run commands</tspan>
+      <tspan x="864.638" y="213.15">or can display what options a command supports.</tspan>
+      <tspan x="864.638" y="229.15"></tspan>
+      <tspan x="864.638" y="245.15">Note that by "command" I mean something our tool will</tspan>
+      <tspan x="864.638" y="261.15">understand. It's not a command the user has saved.</tspan>
     </text>
   </g>
   <g>
-    <rect style="fill: #ffffff" x="813" y="329" width="51.2" height="28"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="813" y="329" width="51.2" height="28"/>
-    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="838.6" y="348">Help</text>
-    <rect style="fill: #ffffff" x="813" y="357" width="51.2" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="813" y="357" width="51.2" height="8"/>
-    <rect style="fill: #ffffff" x="813" y="365" width="51.2" height="8"/>
-    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="813" y="365" width="51.2" height="8"/>
+    <rect style="fill: #ffffff" x="806.638" y="354.638" width="56.2" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="806.638" y="354.638" width="56.2" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="834.738" y="373.638">Help</text>
+    <rect style="fill: #ffffff" x="806.638" y="382.638" width="56.2" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="806.638" y="382.638" width="56.2" height="8"/>
+    <rect style="fill: #ffffff" x="806.638" y="390.638" width="56.2" height="20"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="806.638" y="390.638" width="56.2" height="20"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="809.638" y="404.638">+run()</text>
   </g>
   <g>
-    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="727.65,249.986 727.65,287.872 838.6,287.872 838.6,327.994 "/>
-    <polygon style="fill: #ffffff" points="735.65,249.986 727.65,233.986 719.65,249.986 "/>
-    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="735.65,249.986 727.65,233.986 719.65,249.986 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="721.288,275.624 721.288,313.509 834.738,313.509 834.738,353.631 "/>
+    <polygon style="fill: #ffffff" points="729.288,275.624 721.288,259.624 713.288,275.624 "/>
+    <polygon style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="729.288,275.624 721.288,259.624 713.288,275.624 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="611.102" y="742.911" width="148.6" height="28"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="611.102" y="742.911" width="148.6" height="28"/>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="685.402" y="761.911">BookmarkType</text>
+    <rect style="fill: #ffffff" x="611.102" y="770.911" width="148.6" height="52"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="611.102" y="770.911" width="148.6" height="52"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="614.102" y="784.911">+id: int</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="614.102" y="800.911">+name: string</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="614.102" y="816.911">+namespace: string</text>
+    <rect style="fill: #ffffff" x="611.102" y="822.911" width="148.6" height="8"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="611.102" y="822.911" width="148.6" height="8"/>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="609.81,679.506 582.102,679.506 582.102,780.911 604.397,780.911 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="591.749,785.911 607.749,780.911 591.749,775.911 "/>
   </g>
 </svg>
