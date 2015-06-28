@@ -15,15 +15,43 @@ class Add extends AbstractCommand implements CommandInterface
     {
         $this->prepareArguments();
 
+        $cli = $this->cli;
         try {
-            $this->cli->arguments->parse();
+            // Try to create bookmark from arguments
+            $cli->arguments->parse();
+            $this->addCommand();
         } catch (\Exception $e) {
-            $this->cli->arguments->usage($this->cli, $argv);
-            $this->cli->br();
-            $this->cli->error($e->getMessage());
-            return;
+            // Otherwise ask for the info interactively
+            $cli->arguments->usage($cli, $argv);
+            $cli->br()->error($e->getMessage());
+            $this->addCommandInteractive();
         }
-        $this->addCommand();
+    }
+
+    private function addCommandInteractive()
+    {
+        $this->cli->br()->whisper('Running command interactively..');
+        $bookmark = new Bookmark();
+        $args = $this->cli->arguments->all();
+        // Bookmark column/property name => CLImate argument name
+        $tableArgMap = array(
+            'command' => 'cmd',
+            'description' => 'desc',
+            'shortcut' => 'shortcut'
+        );
+        foreach ($tableArgMap as $columnName => $argumentName) {
+            /** @var \League\CLImate\Argument\Argument $arg */
+            $arg = $args[$argumentName];
+            $prefix = '';
+            if ($arg->hasPrefix()) {
+                $prefix = ' [-' . $arg->prefix() . ']';
+            }
+            $input = $this->cli->input($arg->description() . $prefix . ":");
+            // Writes the argument input to its corresponding bookmark property
+            $bookmark->$columnName = $input->prompt();
+        }
+        $bookmark->save();
+        $this->cli->info("New bookmark was saved: " . $bookmark->shortcut);
     }
 
     private function prepareArguments()
