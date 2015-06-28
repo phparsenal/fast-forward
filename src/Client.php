@@ -47,6 +47,9 @@ class Client
     {
         $this->cli = new CLImate();
         $this->cli->description('fast-forward ' . FF_VERSION);
+        if (OS::isType(OS::LINUX)) {
+            $this->cli->forceAnsiOn();
+        }
         $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
 
