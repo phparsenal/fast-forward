@@ -4,6 +4,7 @@ namespace phparsenal\fastforward\Model;
 use cli\Streams;
 use nochso\ORM\Model;
 use phparsenal\fastforward\Client;
+use phparsenal\fastforward\OS;
 
 class Bookmark extends Model
 {
@@ -69,17 +70,18 @@ class Bookmark extends Model
      */
     public function run($client)
     {
-        $os = php_uname('s');
-        if ($os === 'Linux') {
-            echo "\ncmd:" . $this->command . "\n";
-        } elseif (strpos($os, 'Windows') === 0) {
-            file_put_contents($client->getBatchPath(), $this->command);
-        } else {
-            throw new Exception('Running commands on ' . $os . ' is currently not supported.');
+        $client->getCLI()->info("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.");
+        switch (OS::getType()) {
+            case OS::LINUX:
+                // Disable Ansi to keep the output clean
+                $client->getCLI()->forceAnsiOff();
+                $client->getCLI()->br()->out("cmd:" . $this->command)->br();
+                break;
+            case OS::WINDOWS:
+                file_put_contents($client->getBatchPath(), $this->command);
+                break;
         }
         $this->hit_count++;
         $this->save();
-        Streams::out("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.\n");
-        Streams::out($this->command . "\n");
     }
 }
