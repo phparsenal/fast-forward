@@ -26,9 +26,9 @@ class Run extends AbstractCommand implements CommandInterface
         try {
             $this->cli->arguments->parse();
         } catch (\Exception $e) {
-            $this->cli->error($e->getMessage());
-            $this->cli->out('');
             $this->cli->arguments->usage($this->cli, $argv);
+            $this->cli->br();
+            $this->cli->error($e->getMessage());
             return;
         }
 
