@@ -4,8 +4,8 @@ namespace phparsenal\fastforward;
 use cli\Streams;
 use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
+use phparsenal\fastforward\Command\AbstractCommand;
 use phparsenal\fastforward\Command\Add;
-use phparsenal\fastforward\Command\CommandInterface;
 use phparsenal\fastforward\Command\Run;
 
 class Client
@@ -29,6 +29,11 @@ class Client
      * @var CLImate
      */
     private $cli;
+
+    /**
+     * @var AbstractCommand[]
+     */
+    private $commands = array();
 
     function __construct()
     {
@@ -61,22 +66,24 @@ class Client
 
         // Build a list of available commands
         $run = new Run($this);
-        /** @var CommandInterface[] $commands */
+        /** @var AbstractCommand[] $commands */
         $commands = array(
             new Add($this),
             $run
         );
+        foreach ($commands as $command) {
+            $this->commands[$command->getName()] = $command;
+        }
 
         // Look for a matching command
         $commandFound = false;
         if (count($this->args) > 1) {
-            foreach ($commands as $command) {
-                if ($command->getName() === $this->args[1]) {
-                    $command->run($this->args);
-                    $commandFound = true;
-                    break;
-                }
+            $needle = $this->args[1];
+            if (isset($this->commands[$needle])) {
+                $this->commands[$needle]->run($this->args);
+                $commandFound = true;
             }
+
         }
 
         // Otherwise run the default "run" command
