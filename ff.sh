@@ -7,7 +7,7 @@ FFTMP="${FFPATH}cli-launch.tmp"
 php $FFPHP "$@" | tee $FFTMP
 
 # Get returned commands
-retcmd=$(grep -E "^cmd:.+" $FFTMP | sed 's/^cmd:\(.*\)/\1/')
+retcmd=$(\grep -E "^cmd:.+" $FFTMP | sed 's/^cmd:\(.*\)/\1/')
 
 # Execute commands
 eval $retcmd
