@@ -9,7 +9,7 @@ use phparsenal\fastforward\Command\Run;
 
 class Client
 {
-    const FF_VERSION = '0.1';
+    const FF_VERSION = '0.1.0';
     /**
      * @var string
      */
