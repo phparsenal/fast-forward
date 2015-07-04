@@ -37,6 +37,7 @@ class Run extends AbstractCommand implements CommandInterface
     private function runBookmark($searchTerms)
     {
         $query = Bookmark::select();
+        echo count($query);
         foreach ($searchTerms as $term) {
             $query->like('shortcut', $term . '%');
         }
@@ -84,14 +85,25 @@ class Run extends AbstractCommand implements CommandInterface
             );
             $i++;
         }
-        $this->client->getCLI()->table($rows);
-        $input = $this->client->getCLI()->input("Which # do you want to run?");
-        $input->accept(function ($response) use ($map) {
-            return isset($map[$response]);
-        });
-        $num = $input->prompt();
-        if (isset($map[$num])) {
-            return $bookmarks[$map[$num]];
+        $this->client->getCLI()->br();
+        echo count($rows);
+        $this->client->getCLI()->br();
+        if (!(count($rows))) {
+            $this->client->getCLI()->out("No commands saved. You will now be prompted to add a command");
+
+            // TODO Automatically bring user to add interactive command
+            $add = new Add($this->client);
+            $add->run(array());
+        } else {
+            $this->client->getCLI()->table($rows);
+            $input = $this->client->getCLI()->input("Which # do you want to run?");
+            $input->accept(function ($response) use ($map) {
+                return isset($map[$response]);
+            });
+            $num = $input->prompt();
+            if (isset($map[$num])) {
+                return $bookmarks[$map[$num]];
+            }
         }
         return null;
     }
