@@ -52,7 +52,8 @@ class Client
         $this->batchPath = $this->folder . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
         file_put_contents($this->batchPath, '');
         DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
-        $this->ensureSchema();
+        $migration = new Migration($this);
+        $migration->run();
     }
 
     /**
@@ -87,46 +88,6 @@ class Client
         if (!$commandFound) {
             $run->run($this->args);
         }
-    }
-
-    /**
-     * Prepares the database when it is new.
-     *
-     * Returns false when database is not usable.
-     */
-    public function ensureSchema()
-    {
-        $sql = "SELECT COUNT(*) FROM sqlite_master";
-        $count = (int)DBA::execute($sql)->fetchColumn();
-        if ($count !== 0) {
-            return;
-        }
-        $cli = $this->getCLI();
-        $cli->out("Database is new. Trying to set up database schema.");
-        $schemaPath = "asset/model.sql";
-        if (!is_file($schemaPath)) {
-            throw new \Exception("Schema file could not be found: \"$schemaPath\"\nPlease make sure that you have this file.");
-        }
-        $schemaSql = file_get_contents($schemaPath);
-        if ($schemaSql === false) {
-            throw new \Exception('Unable to read schema file: "' . $schemaPath . '"');
-        }
-        // Explode into single statements without empty strings
-        $schemaSqlList = array_filter(explode(';', $schemaSql), 'trim');
-        $progress = $cli->progress()->total(count($schemaSqlList));
-        $progress->current(0);
-        foreach ($schemaSqlList as $key => $singleSql) {
-            $singleSql = trim($singleSql);
-            try {
-                $statement = DBA::prepare($singleSql);
-                $statement->execute();
-            } catch (\PDOException $e) {
-                $msg = "SQL error: " . $e->getMessage() . "\nWhile trying to execute:\n$singleSql";
-                throw new \Exception($msg);
-            }
-            $progress->current($key + 1);
-        }
-        $cli->out("Database is ready.");
     }
 
     /**
