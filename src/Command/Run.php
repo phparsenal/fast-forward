@@ -90,8 +90,6 @@ class Run extends AbstractCommand implements CommandInterface
         $this->client->getCLI()->br();
         if (!(count($rows))) {
             $this->client->getCLI()->out("No commands saved. You will now be prompted to add a command");
-
-            // TODO Automatically bring user to add interactive command
             $add = new Add($this->client);
             $add->run(array());
         } else {
