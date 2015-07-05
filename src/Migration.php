@@ -151,7 +151,11 @@ class Migration
      */
     public function getDatabaseVersion()
     {
-        return $this->client->get('database.version');
+        try {
+            return $this->client->get('database.version');
+        } catch (\PDOException $e) {
+            return null;
+        }
     }
 
     private function saveDatabaseVersion()
