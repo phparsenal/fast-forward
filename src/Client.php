@@ -159,7 +159,7 @@ class Client
      */
     public function get($key, $returnModel = false)
     {
-        $setting = Setting::select()->eq('id', $key)->one();
+        $setting = Setting::select()->eq('key', $key)->one();
         if ($returnModel || $setting === null) {
             return $setting;
         }
