@@ -84,14 +84,20 @@ class Run extends AbstractCommand implements CommandInterface
             );
             $i++;
         }
-        $this->client->getCLI()->table($rows);
-        $input = $this->client->getCLI()->input("Which # do you want to run?");
-        $input->accept(function ($response) use ($map) {
-            return isset($map[$response]);
-        });
-        $num = $input->prompt();
-        if (isset($map[$num])) {
-            return $bookmarks[$map[$num]];
+        if (!(count($rows))) {
+            $this->cli->out('No bookmarks saved. You will now be prompted to add a bookmark!');
+            $add = new Add($this->client);
+            $add->run(array());
+        } else {
+            $this->client->getCLI()->table($rows);
+            $input = $this->client->getCLI()->input("Which # do you want to run?");
+            $input->accept(function ($response) use ($map) {
+                return isset($map[$response]);
+            });
+            $num = $input->prompt();
+            if (isset($map[$num])) {
+                return $bookmarks[$map[$num]];
+            }
         }
         return null;
     }
