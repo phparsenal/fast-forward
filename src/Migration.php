@@ -151,19 +151,12 @@ class Migration
      */
     public function getDatabaseVersion()
     {
-        $sql = 'SELECT "value" FROM "setting" WHERE "key" = ?';
-        try {
-            return DBA::execute($sql, array('database.version'))->fetchColumn();
-        } catch (\Exception $e) {
-            return null;
-        }
+        return $this->client->get('database.version');
     }
 
     private function saveDatabaseVersion()
     {
-        // TODO Use a setter
-        $sql = 'INSERT INTO setting ("key", "value") VALUES (?, ?)';
-        DBA::execute($sql, array('database.version', Client::FF_VERSION));
+        $this->client->set('database.version', Client::FF_VERSION);
     }
 
     /**

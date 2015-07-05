@@ -6,6 +6,7 @@ use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\AbstractCommand;
 use phparsenal\fastforward\Command\Add;
 use phparsenal\fastforward\Command\Run;
+use phparsenal\fastforward\Model\Setting;
 
 class Client
 {
@@ -129,5 +130,39 @@ class Client
     public function getCLI()
     {
         return $this->cli;
+    }
+
+    /**
+     * Saves a setting as a key/value pair
+     *
+     * @param string $key
+     * @param string $value
+     * @throws \Exception
+     */
+    public function set($key, $value)
+    {
+        $setting = $this->get($key, true);
+        if ($setting === null) {
+            $setting = new Setting();
+            $setting->key = $key;
+        }
+        $setting->value = $value;
+        $setting->save();
+    }
+
+    /**
+     * Return the string or Model value for $key
+     *
+     * @param string $key
+     * @param bool $returnModel Returns a model instance when true
+     * @return null|string|Setting
+     */
+    public function get($key, $returnModel = false)
+    {
+        $setting = Setting::select()->eq('id', $key)->one();
+        if ($returnModel || $setting === null) {
+            return $setting;
+        }
+        return $setting->value;
     }
 }
