@@ -32,6 +32,10 @@ class Set extends AbstractCommand implements CommandInterface
                 $this->set($key, $value);
                 return;
             }
+            if ($args->defined('list')) {
+                $this->listAll();
+                return;
+            }
             throw new \Exception();
         } catch (\Exception $e) {
             $this->cli->arguments->usage($this->cli, $argv);
@@ -42,6 +46,12 @@ class Set extends AbstractCommand implements CommandInterface
     {
         $this->cli->arguments->add(
             array(
+                'list' => array(
+                    'prefix' => 'l',
+                    'longPrefix' => 'list',
+                    'description' => 'Show a list of all current settings',
+                    'noValue' => true
+                ),
                 'set' => array(
                     'description' => 'Command to set a variable',
                     'required' => true
@@ -78,5 +88,12 @@ class Set extends AbstractCommand implements CommandInterface
         }
         $this->client->set($key, $value);
     }
-    
+
+    public function listAll()
+    {
+        $settings = Setting::select()->orderAsc('key')->all();
+        foreach ($settings as $setting) {
+            $this->cli->out('"' . $setting->key . '" "' . $setting->value . '"');
+        }
+    }
 }
