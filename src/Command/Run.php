@@ -85,6 +85,7 @@ class Run extends AbstractCommand implements CommandInterface
             $i++;
         }
         if (!(count($rows))) {
+            $this->cli->out('No bookmarks saved. You will now be prompted to add a bookmark!');
             $add = new Add($this->client);
             $add->run(array());
         } else {
