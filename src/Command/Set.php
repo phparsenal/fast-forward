@@ -11,6 +11,14 @@ namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Setting;
 
+/**
+ * Save and list settings
+ *
+ * TODO Allow importing of many settings at once
+ * TODO Use some kind of namespacing? e.g. ff.* for global, add.* for certain commands
+ * TODO Allow the user to include these as variables in commands, e.g. $user.home will be replaced with its value
+ * during run time
+ */
 class Set extends AbstractCommand implements CommandInterface
 {
 
