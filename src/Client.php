@@ -6,6 +6,7 @@ use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\AbstractCommand;
 use phparsenal\fastforward\Command\Add;
 use phparsenal\fastforward\Command\Run;
+use phparsenal\fastforward\Command\Set;
 use phparsenal\fastforward\Model\Setting;
 
 class Client
@@ -69,6 +70,7 @@ class Client
         /** @var AbstractCommand[] $commands */
         $commands = array(
             new Add($this),
+            new Set($this),
             $run
         );
         foreach ($commands as $command) {
