@@ -99,6 +99,7 @@ class Set extends AbstractCommand implements CommandInterface
 
     public function listAll()
     {
+        $this->cli->forceAnsiOff();
         $settings = Setting::select()->orderAsc('key')->all();
         foreach ($settings as $setting) {
             $this->cli->out($setting->key . ' ' . $setting->value);
