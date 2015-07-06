@@ -47,27 +47,7 @@ class Set extends AbstractCommand implements CommandInterface
             $this->listAll();
             return;
         }
-        $lines = array();
-        if ($args->defined('file')){
-            $this->cli->out('Reading settings from file: ' . $args->get('file'));
-            $lines = file($args->get('file'));
-        } else {
-            $this->cli->arguments->usage($this->cli, $argv);
-            $h = fopen('php://stdin', 'r');
-            $this->cli->info('Reading settings from stdin..')->br();
-            $lines = array();
-            while (!feof($h)) {
-                $lines[] = fgets($h);
-            }
-            fclose($h);
-        }
-        foreach ($lines as $line) {
-            if (preg_match('/^([^ ]+) (.*)/', $line, $matches)) {
-                $this->client->set($matches[1],$matches[2]);
-            } elseif (trim($line) !== '') {
-                $this->cli->out('Line ignored: ' . $line);
-            }
-        }
+        $this->import($argv);
     }
 
     private function prepareArguments()
@@ -105,6 +85,64 @@ class Set extends AbstractCommand implements CommandInterface
         $settings = Setting::select()->orderAsc('key')->all();
         foreach ($settings as $setting) {
             $this->cli->out($setting->key . ' ' . $setting->value);
+        }
+    }
+
+    /**
+     * @param array $argv
+     * @throws \Exception
+     */
+    private function import($argv)
+    {
+        $args = $this->cli->arguments;
+        $lines = array();
+        if ($args->defined('file')) {
+            $lines = $this->getLinesFile($args);
+        } else {
+            $this->cli->arguments->usage($this->cli, $argv);
+            $lines = $this->getLinesStdin();
+        }
+        $this->addLines($lines);
+    }
+
+    /**
+     * @return array
+     */
+    private function getLinesStdin()
+    {
+        $this->cli->info('Reading settings from stdin..')->br();
+        $h = fopen('php://stdin', 'r');
+        $lines = array();
+        while (!feof($h)) {
+            $lines[] = fgets($h);
+        }
+        fclose($h);
+        return $lines;
+    }
+
+    /**
+     * @param $args
+     * @return array
+     */
+    private function getLinesFile($args)
+    {
+        $this->cli->out('Reading settings from file: ' . $args->get('file'));
+        $lines = file($args->get('file'));
+        return $lines;
+    }
+
+    /**
+     * @param $lines
+     * @throws \Exception
+     */
+    private function addLines($lines)
+    {
+        foreach ($lines as $line) {
+            if (preg_match('/^([^ ]+) (.*)/', $line, $matches)) {
+                $this->client->set($matches[1], $matches[2]);
+            } elseif (trim($line) !== '') {
+                $this->cli->out('Line ignored: ' . $line);
+            }
         }
     }
 }
