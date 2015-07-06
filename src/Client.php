@@ -106,6 +106,10 @@ class Client
      */
     public function ordinal($number)
     {
+        // Cast only to int when it's a string with digits only
+        if (is_string($number) && ctype_digit($number)) {
+            $number = (int)$number;
+        }
         if (is_int($number)) {
             $ends = array('th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th');
             if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
@@ -113,9 +117,8 @@ class Client
             } else {
                 return $number . $ends[$number % 10];
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
