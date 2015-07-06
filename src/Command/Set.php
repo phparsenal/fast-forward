@@ -101,7 +101,23 @@ class Set extends AbstractCommand implements CommandInterface
     {
         $settings = Setting::select()->orderAsc('key')->all();
         foreach ($settings as $setting) {
-            $this->cli->out('"' . $setting->key . '" "' . $setting->value . '"');
+            $this->cli->out($this->quote($setting->key) . ' ' . $this->quote($setting->value));
         }
+    }
+
+    /**
+     * Returns a safe string to use as an argument on the command line
+     *
+     * @param $argument String you want to safely use via CLI
+     * @return string Escaped string if needed, otherwise same as input
+     */
+    public function quote($argument)
+    {
+        // Quote the argument only if it could escape context
+        if (escapeshellcmd($argument) !== $argument) {
+            return escapeshellarg($argument);
+        }
+        // Otherwise return as is
+        return $argument;
     }
 }
