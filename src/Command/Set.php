@@ -33,21 +33,21 @@ class Set extends AbstractCommand implements CommandInterface
         try {
             $args = $this->cli->arguments;
             $args->parse();
-            $key = $args->get('key');
-            $value = $args->get('value');
-
-            if ($key !== null && $value !== null) {
-                $this->set($key, $value);
-                return;
-            }
-            if ($args->defined('list')) {
-                $this->listAll();
-                return;
-            }
-            throw new \Exception();
         } catch (\Exception $e) {
             $this->cli->arguments->usage($this->cli, $argv);
+            return;
         }
+        $key = $args->get('key');
+        $value = $args->get('value');
+        if ($key !== null && $value !== null) {
+            $this->client->set($key, $value);
+            return;
+        }
+        if ($args->defined('list')) {
+            $this->listAll();
+            return;
+        }
+        $this->import($argv);
     }
 
     private function prepareArguments()
@@ -57,7 +57,7 @@ class Set extends AbstractCommand implements CommandInterface
                 'list' => array(
                     'prefix' => 'l',
                     'longPrefix' => 'list',
-                    'description' => 'Show a list of all current settings',
+                    'description' => "Show a list of all current settings. Save to file: ff set -l > file.txt",
                     'noValue' => true
                 ),
                 'set' => array(
@@ -69,55 +69,80 @@ class Set extends AbstractCommand implements CommandInterface
                 ),
                 'value' => array(
                     'description' => 'Value to be set',
+                ),
+                'file' => array(
+                    'prefix' => 'i',
+                    'longPrefix' => 'import',
+                    'description' => 'Import from the specified file',
                 )
             )
         );
     }
 
-    /**
-     * @param string $key
-     * @param string $value
-     */
-    public function set($key, $value)
-    {
-        $oldValue = $this->client->get($key);
-        if ($oldValue === null) {
-            $this->cli
-                ->out("Inserting new setting:")
-                ->out("$key = $value");
-        } elseif ($oldValue !== $value) {
-            $this->cli
-                ->out("Changing setting:")
-                ->out("$key = $oldValue --> <bold>$value</bold>");
-        } else {
-            $this->cli
-                ->out("Setting already up-to-date:")
-                ->out("$key = $value");
-        }
-        $this->client->set($key, $value);
-    }
-
     public function listAll()
     {
+        $this->cli->forceAnsiOff();
         $settings = Setting::select()->orderAsc('key')->all();
         foreach ($settings as $setting) {
-            $this->cli->out($this->quote($setting->key) . ' ' . $this->quote($setting->value));
+            $this->cli->out($setting->key . ' ' . $setting->value);
         }
     }
 
     /**
-     * Returns a safe string to use as an argument on the command line
-     *
-     * @param $argument String you want to safely use via CLI
-     * @return string Escaped string if needed, otherwise same as input
+     * @param array $argv
+     * @throws \Exception
      */
-    public function quote($argument)
+    private function import($argv)
     {
-        // Quote the argument only if it could escape context
-        if (escapeshellcmd($argument) !== $argument) {
-            return escapeshellarg($argument);
+        $args = $this->cli->arguments;
+        $lines = array();
+        if ($args->defined('file')) {
+            $lines = $this->getLinesFile($args);
+        } else {
+            $this->cli->arguments->usage($this->cli, $argv);
+            $lines = $this->getLinesStdin();
         }
-        // Otherwise return as is
-        return $argument;
+        $this->addLines($lines);
+    }
+
+    /**
+     * @return array
+     */
+    private function getLinesStdin()
+    {
+        $this->cli->info('Reading settings from stdin..')->br();
+        $h = fopen('php://stdin', 'r');
+        $lines = array();
+        while (!feof($h)) {
+            $lines[] = fgets($h);
+        }
+        fclose($h);
+        return $lines;
+    }
+
+    /**
+     * @param $args
+     * @return array
+     */
+    private function getLinesFile($args)
+    {
+        $this->cli->out('Reading settings from file: ' . $args->get('file'));
+        $lines = file($args->get('file'));
+        return $lines;
+    }
+
+    /**
+     * @param $lines
+     * @throws \Exception
+     */
+    private function addLines($lines)
+    {
+        foreach ($lines as $line) {
+            if (preg_match('/^([^ ]+) (.*)/', $line, $matches)) {
+                $this->client->set($matches[1], $matches[2]);
+            } elseif (trim($line) !== '') {
+                $this->cli->out('Line ignored: ' . $line);
+            }
+        }
     }
 }
