@@ -154,6 +154,21 @@ class Client
             $setting = new Setting();
             $setting->key = $key;
         }
+
+        if ($setting->value === null) {
+            $this->cli
+                ->out("Inserting new setting:")
+                ->out("$key = $value");
+        } elseif ($setting->value !== $value) {
+            $this->cli
+                ->out("Changing setting:")
+                ->out("$key = {$setting->value} --> <bold>$value</bold>");
+        } else {
+            $this->cli
+                ->out("Setting already up-to-date:")
+                ->out("$key = $value");
+        }
+
         $setting->value = $value;
         $setting->save();
     }
