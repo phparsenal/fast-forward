@@ -140,12 +140,15 @@ class Client
     /**
      * Saves a setting as a key/value pair
      *
-     * @param string $key
+     * @param string $key Any string that does not contain spaces
      * @param string $value
      * @throws \Exception
      */
     public function set($key, $value)
     {
+        if (strpos($key, ' ') !== false) {
+            throw new \Exception('Error while trying to save setting "' . $key . '": Key name must not contain spaces.');
+        }
         $setting = $this->get($key, true);
         if ($setting === null) {
             $setting = new Setting();
