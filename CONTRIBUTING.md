@@ -47,10 +47,13 @@ To join in on discussions or ask for help, go to:
             Your pull request will get mentioned in issue #5.
 
 ### Coding style
-We follow [PSR2](http://www.php-fig.org/psr/psr-2/).
 
-You can use this to fix most differences automatically:
-`vendor/bin/php-cs-fixer fix`
+We use php-fig's PSRs as they currently reflect PHP best practices.
+
+* Follow the [PSR-2 coding style guide](http://www.php-fig.org/psr/psr-2/)
+    * We have a default configuration for the [PHP Coding Standards Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer) that will fix most standard related issues:
+    Simply run `vendor/bin/php-cs-fixer fix`
+- Follow the [PSR-4 autoloader standard](http://www.php-fig.org/psr/psr-4/)
 
 ### Unit tests
 You can look at the existing tests in folder `tests`. 
