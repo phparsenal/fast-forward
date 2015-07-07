@@ -4,6 +4,19 @@ Consider these guidelines or recommendations open for discussion.
 
 Don't worry if you don't know how to put everything into practice. We're all here to learn :)
 
+* [Contributing](#contributing)
+    * [Learn & listen](#learn--listen)
+    * [Adding new features](#adding-new-features)
+        * [General workflow](#general-workflow)
+        * [Coding style](#coding-style)
+        * [Unit tests](#unit-tests)
+* [Bug triage](#bug-triage)
+* [Beta testing](#beta-testing)
+* [Translations](#translations)
+* [Documentation](#documentation)
+* [Community](#community)
+* [Your first bugfix](#your-first-bugfix)
+
 ## Learn & listen
 
 To join in on discussions or ask for help, go to:
@@ -92,4 +105,4 @@ If you don't have any programming experience, we still need your help:
 * First get to know [git](https://git-scm.com/): [cheat sheet](http://learnxinyminutes.com/docs/git/)
 * Read about our [general workflow](#workflow)
 
-If you have any questions, feel free to contact us as [described here](#user-content-learn--listen).
+If you have any questions, feel free to contact us as [described here](#learn--listen).
