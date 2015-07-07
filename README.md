@@ -1,5 +1,7 @@
 # fast-forward
 
+[![Join the chat at https://gitter.im/phparsenal/fast-forward](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/phparsenal/fast-forward?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://travis-ci.org/phparsenal/fast-forward.svg?branch=master)](https://travis-ci.org/phparsenal/fast-forward) [![Dependency Status](https://www.versioneye.com/user/projects/558dbe19316338002400001c/badge.svg?style=flat)](https://www.versioneye.com/user/projects/558dbe19316338002400001c)
 
 **fast-forward** lets you remember, find and open your most used commands and folders.
