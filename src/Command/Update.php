@@ -30,7 +30,7 @@ class Update extends AbstractCommand implements CommandInterface
         $this->cli->br()->whisper('Running command interactively..');
         $bookmark = new Bookmark();
         $tableArgMap = array();
-        if ((!$this->cli->arguments->defined('shortcut'))) {
+        if ($this->cli->arguments->get('shortcut') === '' || (!($this->cli->arguments->defined('shortcut')))) {
             $tableArgMap['shortcut'] = 'shortcut';
         } else {
             $this->cli->br()->out('Updating shortcut: ' . $this->cli->arguments->get('shortcut'));
@@ -48,10 +48,11 @@ class Update extends AbstractCommand implements CommandInterface
             $input = $this->cli->input($arg->description() . $prefix . ":");
             $in = $input->prompt();
             if ($argumentName == 'shortcut') {
-                $bookmark = Bookmark::select()->where('shortcut', $in)->one();
+                $shortcut = $in;
+                $bookmark = Bookmark::select()->where('shortcut', $shortcut)->one();
                 if (!$bookmark) {
-                    $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Please try again with a valid shortcut');
-                    $this->updateCommandInteractive();
+                    $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Run ff with no parameters to view a list of available shortcuts');
+                    exit(0);
                 }
             }
             if (strlen($in) > 0) {
@@ -89,8 +90,8 @@ class Update extends AbstractCommand implements CommandInterface
         $args = $this->cli->arguments;
         $bookmark = Bookmark::select()->where('shortcut', $args->get('shortcut'))->one();
         if (!$bookmark) {
-            $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Please try again with a valid shortcut');
-            $this->updateCommandInteractive();
+            $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Run ff with no parameters to view a list of available shortcuts');
+            exit(0);
         }
         if ($args->defined('desc')) {
             $bookmark->description = $args->get('desc');

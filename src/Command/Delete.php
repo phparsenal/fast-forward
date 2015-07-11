@@ -45,7 +45,11 @@ class Delete extends AbstractCommand implements CommandInterface
 
     public function deleteCommand()
     {
-        $bookmark = Bookmark::select()->where('shortcut', $this->cli->arguments->get('shortcut'));
+        $bookmark = Bookmark::select()->where('shortcut', $this->cli->arguments->get('shortcut'))->all();
+        if ($bookmark->count() <= 0) {
+            $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Please try again with a valid shortcut');
+            exit(0);
+        }
         $bookmark->delete();
         $this->cli->info("Bookmark " . $this->cli->arguments->get('shortcut') . " deleted successfully...");
     }
@@ -54,6 +58,7 @@ class Delete extends AbstractCommand implements CommandInterface
     {
         $this->cli->br()->whisper('Running command interactively..');
         $args = $this->cli->arguments->all();
+        $bookmark = new Bookmark();
         // Bookmark column/property name => CLImate argument name
         $tableArgMap = array(
             'shortcut' => 'shortcut'
@@ -66,9 +71,15 @@ class Delete extends AbstractCommand implements CommandInterface
                 $prefix = ' [-' . $arg->prefix() . ']';
             }
             $input = $this->cli->input($arg->description() . $prefix . ":");
-            $bookmark = Bookmark::select()->where('shortcut', $input->prompt());
-            $bookmark->delete();
+            $shortcut = $input->prompt();
+            $bookmark = Bookmark::select()->where('shortcut', $shortcut)->one();
+            if ($bookmark === null) {
+                $this->cli->br()->error($shortcut . ' does not exist. Please try again with a valid shortcut');
+                exit(0);
+            }
         }
-        $this->cli->info("Bookmark " . $this->cli->arguments->get('shortcut') . " deleted successfully...");
+        $shortcut = $bookmark->shortcut;
+        $bookmark->delete();
+        $this->cli->info("Bookmark " . $shortcut . " deleted successfully...");
     }
 }
