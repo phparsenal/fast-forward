@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: John
- * Date: 11/07/2015
- * Time: 12:30
- */
 
 namespace phparsenal\fastforward\Command;
 
