@@ -5,8 +5,10 @@ use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\AbstractCommand;
 use phparsenal\fastforward\Command\Add;
+use phparsenal\fastforward\Command\Delete;
 use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
+use phparsenal\fastforward\Command\Update;
 use phparsenal\fastforward\Model\Setting;
 
 class Client
@@ -71,6 +73,8 @@ class Client
         $commands = array(
             new Add($this),
             new Set($this),
+            new Update($this),
+            new Delete($this),
             $run
         );
         foreach ($commands as $command) {
