@@ -51,6 +51,13 @@ class Bookmark extends Model
      * @var int
      */
     public $ts_created;
+
+    /**
+     * UTC timestamp of last modification
+     *
+     * @var int
+     */
+    public $ts_modified = '';
     #endregion
 
     /**
