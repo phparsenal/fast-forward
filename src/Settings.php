@@ -109,9 +109,15 @@ class Settings
         $cli = $this->client->getCLI();
         $cli->br();
         $cli->info('Supported settings:');
+        $currentSettings = Setting::select()
+            ->in('key', array_keys($this->supportedSettings))
+            ->all();
         foreach ($this->supportedSettings as $key => $info) {
-            $cli->out($key);
-            $cli->tab()->out($info['desc']);
+            $cli->inline($key);
+            if (isset($currentSettings[$key])) {
+                $cli->inline(' = <bold>' . $currentSettings[$key]->value . '</bold>');
+            }
+            $cli->br()->tab()->out($info['desc']);
         }
         $cli->br();
     }
