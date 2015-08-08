@@ -109,9 +109,22 @@ class Run extends AbstractCommand implements CommandInterface
         foreach ($searchTerms as $term) {
             $query->like('shortcut', $term . '%');
         }
-        $query->orderDesc('hit_count');
+
+        $sortColumn = $this->client->get('ff.sort');
+        $columnMap = Bookmark::select()->toAssoc();
+        if ($sortColumn === null || !isset($columnMap[$sortColumn])) {
+            $sortColumn = 'hit_count';
+        }
+        // Large hit counts and latest time stamps first
+        if ($sortColumn === 'hit_count' || substr($sortColumn, 0, 3) === 'ts_') {
+            $query->orderDesc($sortColumn);
+        } else {
+            $query->orderAsc($sortColumn);
+        }
+
+        // Don't limit when setting not set or zero
         $maxRows = $this->client->get('ff.maxrows');
-        if ($maxRows !== null) {
+        if ($maxRows !== null && $maxRows !== 0) {
             $query->limit($maxRows);
         }
         $bookmarks = $query->all();

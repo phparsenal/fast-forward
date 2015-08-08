@@ -2,6 +2,7 @@
 
 namespace phparsenal\fastforward;
 
+use phparsenal\fastforward\Model\Bookmark;
 use phparsenal\fastforward\Model\Setting;
 use Respect\Validation\Exceptions\NestedValidationExceptionInterface;
 use Respect\Validation\Validator as v;
@@ -19,6 +20,11 @@ class Settings
         $this->supportedSettings['ff.maxrows'] = array(
             'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
             'validation' => array(v::int()->min(0, true)),
+        );
+        $sortColumns = array_keys(Bookmark::select()->toAssoc());
+        $this->supportedSettings['ff.sort'] = array(
+            'desc' => 'Sort order of results (' . implode($sortColumns, ', ') . ')',
+            'validation' => array(v::in($sortColumns)),
         );
     }
 
