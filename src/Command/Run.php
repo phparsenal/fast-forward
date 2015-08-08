@@ -37,16 +37,7 @@ class Run extends AbstractCommand implements CommandInterface
 
     private function runBookmark($searchTerms)
     {
-        $query = Bookmark::select();
-        foreach ($searchTerms as $term) {
-            $query->like('shortcut', $term . '%');
-        }
-        $query->orderDesc('hit_count');
-        $maxRows = $this->client->get('ff.maxrows');
-        if ($maxRows !== null) {
-            $query->limit($maxRows);
-        }
-        $bookmarks = $query->all();
+        $bookmarks = $this->searchBookmarks($searchTerms);
         $bm = $this->selectBookmark($bookmarks, $searchTerms);
         if ($bm !== null) {
             $bm->run($this->client);
@@ -106,5 +97,24 @@ class Run extends AbstractCommand implements CommandInterface
             }
         }
         return null;
+    }
+
+    /**
+     * @param array $searchTerms
+     * @return \nochso\ORM\ResultSet
+     */
+    private function searchBookmarks($searchTerms)
+    {
+        $query = Bookmark::select();
+        foreach ($searchTerms as $term) {
+            $query->like('shortcut', $term . '%');
+        }
+        $query->orderDesc('hit_count');
+        $maxRows = $this->client->get('ff.maxrows');
+        if ($maxRows !== null) {
+            $query->limit($maxRows);
+        }
+        $bookmarks = $query->all();
+        return $bookmarks;
     }
 }
