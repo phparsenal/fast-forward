@@ -110,15 +110,30 @@ class Settings
         return true;
     }
 
-    public function showSupportedSettings()
+    /**
+     * Shows support info for all or specified setting(s)
+     *
+     * @param null|string $key Key/name of a specific setting. Leave empty for
+     *                         all settings.
+     */
+    public function showSupportedSettings($key = null)
     {
+        $settings = array();
+        if ($key !== null && isset($this->supportedSettings[$key])) {
+            $settings[$key] = $this->supportedSettings[$key];
+        } else {
+            $settings = $this->supportedSettings;
+        }
+
+        $currentSettings = Setting::select()
+            ->in('key', array_keys($settings))
+            ->all();
+
         $cli = $this->client->getCLI();
         $cli->br();
         $cli->info('Supported settings:');
-        $currentSettings = Setting::select()
-            ->in('key', array_keys($this->supportedSettings))
-            ->all();
-        foreach ($this->supportedSettings as $key => $info) {
+
+        foreach ($settings as $key => $info) {
             $cli->inline($key);
             if (isset($currentSettings[$key])) {
                 $cli->inline(' = <bold>' . $currentSettings[$key]->value . '</bold>');

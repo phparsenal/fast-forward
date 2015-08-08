@@ -30,6 +30,13 @@ class Set extends AbstractCommand implements CommandInterface
             $this->client->set($key, $value);
             return;
         }
+
+        // Show info about setting when no value is supplied
+        if ($key !== null && $value === null) {
+            $this->client->getSettings()->showSupportedSettings($key);
+            return;
+        }
+
         if ($args->defined('list')) {
             $this->listAll();
             return;
