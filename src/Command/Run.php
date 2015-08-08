@@ -42,6 +42,10 @@ class Run extends AbstractCommand implements CommandInterface
             $query->like('shortcut', $term . '%');
         }
         $query->orderDesc('hit_count');
+        $maxRows = $this->client->get('ff.maxrows');
+        if ($maxRows !== null) {
+            $query->limit($maxRows);
+        }
         $bookmarks = $query->all();
         $bm = $this->selectBookmark($bookmarks, $searchTerms);
         if ($bm !== null) {
