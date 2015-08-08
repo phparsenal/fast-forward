@@ -21,7 +21,7 @@ class Set extends AbstractCommand implements CommandInterface
             $args = $this->cli->arguments;
             $args->parse();
         } catch (\Exception $e) {
-            $this->cli->arguments->usage($this->cli, $argv);
+            $this->showUsage($argv);
             return;
         }
         $key = $args->get('key');
@@ -87,10 +87,16 @@ class Set extends AbstractCommand implements CommandInterface
         if ($args->defined('file')) {
             $lines = $this->getLinesFile($args);
         } else {
-            $this->cli->arguments->usage($this->cli, $argv);
+            $this->showUsage($argv);
             $lines = $this->getLinesStdin();
         }
         $this->addLines($lines);
+    }
+
+    private function showUsage($argv)
+    {
+        $this->cli->arguments->usage($this->cli, $argv);
+        $this->client->getSettings()->showSupportedSettings();
     }
 
     /**

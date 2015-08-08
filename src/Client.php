@@ -147,6 +147,13 @@ class Client
     }
 
     /**
+     * @return Settings
+     */
+    public function getSettings() {
+        return $this->settings;
+    }
+
+    /**
      * Saves a setting as a key/value pair
      *
      * @param string $key Any string that does not contain spaces

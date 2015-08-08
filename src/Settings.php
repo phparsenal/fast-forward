@@ -11,13 +11,13 @@ class Settings
     /** @var Client */
     private $client;
 
-    private $knownSettings = array();
+    private $supportedSettings = array();
 
     public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->knownSettings['ff.maxrows'] = array(
-            'desc' => 'Limit amount of results',
+        $this->supportedSettings['ff.maxrows'] = array(
+            'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
             'validation' => array(v::int()->min(0, true)),
         );
     }
@@ -85,10 +85,10 @@ class Settings
      */
     public function validate(Setting $setting)
     {
-        if (!isset($this->knownSettings[$setting->key])) {
+        if (!isset($this->supportedSettings[$setting->key])) {
             return true;
         }
-        $info = $this->knownSettings[$setting->key];
+        $info = $this->supportedSettings[$setting->key];
         if (!isset($info['validation'])) {
             return true;
         }
@@ -102,5 +102,17 @@ class Settings
             }
         }
         return true;
+    }
+
+    public function showSupportedSettings()
+    {
+        $cli = $this->client->getCLI();
+        $cli->br();
+        $cli->info('Supported settings:');
+        foreach ($this->supportedSettings as $key => $info) {
+            $cli->out($key);
+            $cli->tab()->out($info['desc']);
+        }
+        $cli->br();
     }
 }
