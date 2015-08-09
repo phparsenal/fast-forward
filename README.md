@@ -98,11 +98,11 @@ The following settings are supported by fast-forward:
     * Default: 1
 
 ### Using custom settings in commands
-You can also create your own settings which can be accessed in commands:
+You can also create your own settings which can be accessed in commands:  
 `ff set location tokio`
 
-Any known settings in commands will be parsed. Surround the setting key with `@`:
+Use the setting name surrounded by `@` in your commands:  
 `weather @location@`
 
-The command that will be executed:
+The identifiers are replaced with the current or default value of the setting:  
 `weather tokio`
