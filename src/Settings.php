@@ -17,26 +17,28 @@ class Settings
     public function __construct(Client $client)
     {
         $this->client = $client;
-        $this->supportedSettings['ff.maxrows'] = array(
-            'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
-            'validation' => array(v::int()->min(0, true)),
-            'default' => 0,
-        );
         $sortColumns = array_keys(Bookmark::select()->toAssoc());
-        $this->supportedSettings['ff.sort'] = array(
-            'desc' => 'Sort order of results (' . implode($sortColumns, ', ') . ')',
-            'validation' => array(v::in($sortColumns)),
-            'default' => 'hit_count'
-        );
-        $this->supportedSettings['ff.interactive'] = array(
-            'desc' => 'Ask for missing input interactively (0 never, 1 always)',
-            'validation' => array(v::in(array('0', '1'))),
-            'default' => '1'
-        );
-        $this->supportedSettings['ff.color'] = array(
-            'desc' => 'Enable color output on supported systems (0/1)',
-            'validation' => array(v::in(array('0', '1'))),
-            'default' => 1
+        $this->supportedSettings = array(
+            'ff.maxrows' => array(
+                'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
+                'validation' => array(v::int()->min(0, true)),
+                'default' => 0,
+            ),
+            'ff.sort' => array(
+                'desc' => 'Sort order of results (' . implode($sortColumns, ', ') . ')',
+                'validation' => array(v::in($sortColumns)),
+                'default' => 'hit_count',
+            ),
+            'ff.interactive' => array(
+                'desc' => 'Ask for missing input interactively (0 never, 1 always)',
+                'validation' => array(v::in(array('0', '1'))),
+                'default' => '1',
+            ),
+            'ff.color' => array(
+                'desc' => 'Enable color output on supported systems (0/1)',
+                'validation' => array(v::in(array('0', '1'))),
+                'default' => 1,
+            ),
         );
     }
 
