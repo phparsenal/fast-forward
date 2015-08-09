@@ -56,6 +56,9 @@ class Delete extends AbstractCommand implements CommandInterface
 
     public function deleteCommandInteractive()
     {
+        if (!$this->client->get('ff.interactive')) {
+            return;
+        }
         $this->cli->br()->whisper('Running command interactively..');
         $args = $this->cli->arguments->all();
         $bookmark = new Bookmark();

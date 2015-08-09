@@ -30,6 +30,9 @@ class Add extends AbstractCommand implements CommandInterface
 
     private function addCommandInteractive()
     {
+        if (!$this->client->get('ff.interactive')) {
+            return;
+        }
         $this->cli->br()->whisper('Running command interactively..');
         $bookmark = new Bookmark();
         $args = $this->cli->arguments->all();

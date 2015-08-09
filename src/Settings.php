@@ -28,6 +28,11 @@ class Settings
             'validation' => array(v::in($sortColumns)),
             'default' => 'hit_count'
         );
+        $this->supportedSettings['ff.interactive'] = array(
+            'desc' => 'Ask for missing input interactively (0 never, 1 always)',
+            'validation' => array(v::in(array('0', '1'))),
+            'default' => '1'
+        );
     }
 
     /**
