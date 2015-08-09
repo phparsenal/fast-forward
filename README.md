@@ -12,6 +12,9 @@
         * [Linux](#linux)
         * [Mac](#mac)
     * [Usage](#usage)
+    * [Settings](#settings)
+        * [Supported and default settings](#supported-and-default-settings)
+        * [Using custom settings in commands](#using-custom-settings-in-commands)
 
 ## Setup
 
@@ -61,3 +64,46 @@ Searching for _htd*_
 If the only result is _htd_ it will be executed, otherwise all matches will be displayed first.
 
     ff htd
+
+## Settings
+
+```
+Usage: ff [-i file, --import file] [-l, --list] [set] [key] [value]
+
+Optional Arguments:
+	-i file, --import file
+		Import from the specified file
+	-l, --list
+		Show a list of all current settings. Save to file: ff set -l > file.txt
+```
+e.g.
+
+`ff set ff.limit 20` Limit to 20 results  
+`ff set -l > settings.txt` Dump settings  
+`ff set < settings.txt` or `ff set -i settings.txt` Import settings
+
+### Supported and default settings
+The following settings are supported by fast-forward:
+
+* **ff.limit**
+    * Limit amount of results (> 0 or 0 for no limit)
+    * Default: 0
+* **ff.sort**
+    * Sort order of results (shortcut, description, command, hit_count, ts_created, ts_modified)
+    * Default: hit_count
+* **ff.interactive**
+    * Ask for missing input interactively (0 never, 1 always)
+    * Default: 1
+* **ff.color**
+    * Enable color output on supported systems (0/1)
+    * Default: 1
+
+### Using custom settings in commands
+You can also create your own settings which can be accessed in commands:  
+`ff set location tokio`
+
+Use the setting name surrounded by `@` in your commands:  
+`weather @location@`
+
+The identifiers are replaced with the current or default value of the setting:  
+`weather tokio`

@@ -3,6 +3,7 @@
 namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Bookmark;
+use phparsenal\fastforward\Settings;
 
 class Add extends AbstractCommand implements CommandInterface
 {
@@ -30,6 +31,9 @@ class Add extends AbstractCommand implements CommandInterface
 
     private function addCommandInteractive()
     {
+        if (!$this->client->get(Settings::INTERACTIVE)) {
+            return;
+        }
         $this->cli->br()->whisper('Running command interactively..');
         $bookmark = new Bookmark();
         $args = $this->cli->arguments->all();

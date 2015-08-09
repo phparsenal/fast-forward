@@ -1,27 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: amblin
- * Date: 05/07/15
- * Time: 15:21
- */
 
 namespace phparsenal\fastforward\Command;
-
 
 use phparsenal\fastforward\Model\Setting;
 
 /**
  * Save and list settings
- *
- * TODO Allow importing of many settings at once
- * TODO Use some kind of namespacing? e.g. ff.* for global, add.* for certain commands
- * TODO Allow the user to include these as variables in commands, e.g. $user.home will be replaced with its value
- * during run time
  */
 class Set extends AbstractCommand implements CommandInterface
 {
-
     protected $name = 'set';
 
     /**
@@ -34,7 +21,7 @@ class Set extends AbstractCommand implements CommandInterface
             $args = $this->cli->arguments;
             $args->parse();
         } catch (\Exception $e) {
-            $this->cli->arguments->usage($this->cli, $argv);
+            $this->showUsage($argv);
             return;
         }
         $key = $args->get('key');
@@ -43,6 +30,13 @@ class Set extends AbstractCommand implements CommandInterface
             $this->client->set($key, $value);
             return;
         }
+
+        // Show info about setting when no value is supplied
+        if ($key !== null && $value === null) {
+            $this->client->getSettings()->showSupportedSettings($key);
+            return;
+        }
+
         if ($args->defined('list')) {
             $this->listAll();
             return;
@@ -57,12 +51,12 @@ class Set extends AbstractCommand implements CommandInterface
                 'list' => array(
                     'prefix' => 'l',
                     'longPrefix' => 'list',
-                    'description' => "Show a list of all current settings. Save to file: ff set -l > file.txt",
-                    'noValue' => true
+                    'description' => 'Show a list of all current settings. Save to file: ff set -l > file.txt',
+                    'noValue' => true,
                 ),
                 'set' => array(
                     'description' => 'Command to set a variable',
-                    'required' => true
+                    'required' => true,
                 ),
                 'key' => array(
                     'description' => 'Name or key of the setting',
@@ -74,7 +68,7 @@ class Set extends AbstractCommand implements CommandInterface
                     'prefix' => 'i',
                     'longPrefix' => 'import',
                     'description' => 'Import from the specified file',
-                )
+                ),
             )
         );
     }
@@ -90,6 +84,7 @@ class Set extends AbstractCommand implements CommandInterface
 
     /**
      * @param array $argv
+     *
      * @throws \Exception
      */
     private function import($argv)
@@ -99,10 +94,16 @@ class Set extends AbstractCommand implements CommandInterface
         if ($args->defined('file')) {
             $lines = $this->getLinesFile($args);
         } else {
-            $this->cli->arguments->usage($this->cli, $argv);
+            $this->showUsage($argv);
             $lines = $this->getLinesStdin();
         }
         $this->addLines($lines);
+    }
+
+    private function showUsage($argv)
+    {
+        $this->cli->arguments->usage($this->cli, $argv);
+        $this->client->getSettings()->showSupportedSettings();
     }
 
     /**
@@ -122,6 +123,7 @@ class Set extends AbstractCommand implements CommandInterface
 
     /**
      * @param $args
+     *
      * @return array
      */
     private function getLinesFile($args)
@@ -133,6 +135,7 @@ class Set extends AbstractCommand implements CommandInterface
 
     /**
      * @param $lines
+     *
      * @throws \Exception
      */
     private function addLines($lines)

@@ -4,6 +4,7 @@ namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Bookmark;
 use NateDrake\DateHelper\DateFormat;
+use phparsenal\fastforward\Settings;
 
 class Run extends AbstractCommand implements CommandInterface
 {
@@ -37,12 +38,7 @@ class Run extends AbstractCommand implements CommandInterface
 
     private function runBookmark($searchTerms)
     {
-        $query = Bookmark::select();
-        foreach ($searchTerms as $term) {
-            $query->like('shortcut', $term . '%');
-        }
-        $query->orderDesc('hit_count');
-        $bookmarks = $query->all();
+        $bookmarks = $this->searchBookmarks($searchTerms);
         $bm = $this->selectBookmark($bookmarks, $searchTerms);
         if ($bm !== null) {
             $bm->run($this->client);
@@ -102,5 +98,37 @@ class Run extends AbstractCommand implements CommandInterface
             }
         }
         return null;
+    }
+
+    /**
+     * @param array $searchTerms
+     * @return \nochso\ORM\ResultSet
+     */
+    private function searchBookmarks($searchTerms)
+    {
+        $query = Bookmark::select();
+        foreach ($searchTerms as $term) {
+            $query->like('shortcut', $term . '%');
+        }
+
+        $sortColumn = $this->client->get(Settings::SORT);
+        $columnMap = Bookmark::select()->toAssoc();
+        if (!isset($columnMap[$sortColumn])) {
+            $sortColumn = 'hit_count';
+        }
+        // Large hit counts and latest time stamps first
+        if ($sortColumn === 'hit_count' || substr($sortColumn, 0, 3) === 'ts_') {
+            $query->orderDesc($sortColumn);
+        } else {
+            $query->orderAsc($sortColumn);
+        }
+
+        // Don't limit when setting not set or zero
+        $maxRows = $this->client->get(Settings::LIMIT);
+        if ($maxRows !== null && $maxRows !== 0) {
+            $query->limit($maxRows);
+        }
+        $bookmarks = $query->all();
+        return $bookmarks;
     }
 }

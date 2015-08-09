@@ -5,6 +5,7 @@ namespace phparsenal\fastforward\Command;
 
 use nochso\ORM\Model;
 use phparsenal\fastforward\Model\Bookmark;
+use phparsenal\fastforward\Settings;
 
 class Delete extends AbstractCommand implements CommandInterface
 {
@@ -56,6 +57,9 @@ class Delete extends AbstractCommand implements CommandInterface
 
     public function deleteCommandInteractive()
     {
+        if (!$this->client->get(Settings::INTERACTIVE)) {
+            return;
+        }
         $this->cli->br()->whisper('Running command interactively..');
         $args = $this->cli->arguments->all();
         $bookmark = new Bookmark();

@@ -85,7 +85,7 @@ class Migration
         // There's already a bookmark table, but no settings yet.
         // Basically the state of the project as this was written.
         $sql = '
-                CREATE TABLE "setting" (
+                CREATE TABLE IF NOT EXISTS "setting" (
                   "key" text NOT NULL,
                   "value" text NOT NULL
                 )';
@@ -152,7 +152,7 @@ class Migration
     public function getDatabaseVersion()
     {
         try {
-            return $this->client->get('database.version');
+            return $this->client->get(Settings::DATABASE_VERSION);
         } catch (\PDOException $e) {
             return null;
         }
@@ -160,7 +160,7 @@ class Migration
 
     private function saveDatabaseVersion()
     {
-        $this->client->set('database.version', Client::FF_VERSION);
+        $this->client->set(Settings::DATABASE_VERSION, Client::FF_VERSION);
     }
 
     /**

@@ -9,3 +9,6 @@ env:
 before_script:
   - travis_retry composer self-update
   - travis_retry composer install --no-interaction --prefer-source --dev
+matrix:
+  allow_failures:
+    - php: 7.0
