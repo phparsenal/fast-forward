@@ -185,4 +185,33 @@ class Settings
         }
         $cli->br();
     }
+
+    /**
+     * Replace setting identifiers with their values.
+     *
+     * Surround the key/name of a setting with an @ to replace it with its
+     * current or default value.
+     *
+     * e.g. "weather @location@" turns into "weather tokio"
+     *
+     * @param string $template
+     *
+     * @return string
+     */
+    public function parseIdentifiers($template)
+    {
+        $out = $template;
+        $token = '@';
+        $pattern = "/$token([a-zA-Z0-9.]+)$token/";
+        if (preg_match_all($pattern, $template, $matches)) {
+            $candidateKeys = $matches[1];
+            foreach ($candidateKeys as $key) {
+                $value = $this->get($key);
+                if ($value !== null) {
+                    $out = str_replace($token . $key . $token, $value, $out);
+                }
+            }
+        }
+        return $out;
+    }
 }

@@ -4,6 +4,7 @@ namespace phparsenal\fastforward\Model;
 use nochso\ORM\Model;
 use phparsenal\fastforward\Client;
 use phparsenal\fastforward\OS;
+use phparsenal\fastforward\Settings;
 
 class Bookmark extends Model
 {
@@ -77,14 +78,15 @@ class Bookmark extends Model
     public function run($client)
     {
         $client->getCLI()->info("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.");
+        $command = $client->getSettings()->parseIdentifiers($this->command);
         switch (OS::getType()) {
             case OS::LINUX:
                 // Disable Ansi to keep the output clean
                 $client->getCLI()->forceAnsiOff();
-                $client->getCLI()->br()->out("cmd:" . $this->command)->br();
+                $client->getCLI()->br()->out("cmd:" . $command)->br();
                 break;
             case OS::WINDOWS:
-                file_put_contents($client->getBatchPath(), $this->command);
+                file_put_contents($client->getBatchPath(), $command);
                 break;
         }
         $this->hit_count++;
