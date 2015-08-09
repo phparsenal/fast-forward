@@ -33,6 +33,11 @@ class Settings
             'validation' => array(v::in(array('0', '1'))),
             'default' => '1'
         );
+        $this->supportedSettings['ff.color'] = array(
+            'desc' => 'Enable color output on supported systems (0/1)',
+            'validation' => array(v::in(array('0', '1'))),
+            'default' => 1
+        );
     }
 
     /**

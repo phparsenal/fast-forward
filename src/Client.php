@@ -48,19 +48,20 @@ class Client
      */
     public function init()
     {
-        $this->cli = new CLImate();
-        $this->cli->description('fast-forward ' . self::FF_VERSION);
-        if (OS::isType(OS::LINUX)) {
-            $this->cli->forceAnsiOn();
-        }
         $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
+        DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
+        $this->settings = new Settings($this);
+
+        $this->cli = new CLImate();
+        if (OS::isType(OS::LINUX) && $this->get('ff.color')) {
+            $this->cli->forceAnsiOn();
+        }
+        $this->cli->description('fast-forward ' . self::FF_VERSION);
 
         // Prevent the previous command from being executed in case anything fails later on
         $this->batchPath = $this->folder . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
         file_put_contents($this->batchPath, '');
-        DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
-        $this->settings = new Settings($this);
         $migration = new Migration($this);
         $migration->run();
     }
