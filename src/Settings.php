@@ -20,11 +20,13 @@ class Settings
         $this->supportedSettings['ff.maxrows'] = array(
             'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
             'validation' => array(v::int()->min(0, true)),
+            'default' => 0,
         );
         $sortColumns = array_keys(Bookmark::select()->toAssoc());
         $this->supportedSettings['ff.sort'] = array(
             'desc' => 'Sort order of results (' . implode($sortColumns, ', ') . ')',
             'validation' => array(v::in($sortColumns)),
+            'default' => 'hit_count'
         );
     }
 
@@ -78,6 +80,14 @@ class Settings
         $setting = Setting::select()
             ->eq('key', $key)
             ->one();
+        if ($setting === null) {
+            if (isset($this->supportedSettings[$key]['default'])) {
+                $setting = new Setting();
+                $setting->key = $key;
+                $setting->value = $this->supportedSettings[$key]['default'];
+                $setting->save();
+            }
+        }
         if ($returnModel || $setting === null) {
             return $setting;
         }
@@ -131,12 +141,15 @@ class Settings
 
         $cli = $this->client->getCLI();
         $cli->br();
-        $cli->info('Supported settings:');
+        $cli->info('Supported settings [default]:');
 
         foreach ($settings as $key => $info) {
             $cli->inline($key);
             if (isset($currentSettings[$key])) {
                 $cli->inline(' = <bold>' . $currentSettings[$key]->value . '</bold>');
+            }
+            if (isset($info['default'])) {
+                $cli->inline(' [' . $info['default'] . ']');
             }
             $cli->br()->tab()->out($info['desc']);
         }
