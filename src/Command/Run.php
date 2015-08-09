@@ -113,7 +113,7 @@ class Run extends AbstractCommand implements CommandInterface
 
         $sortColumn = $this->client->get(Settings::SORT);
         $columnMap = Bookmark::select()->toAssoc();
-        if ($sortColumn === null || !isset($columnMap[$sortColumn])) {
+        if (!isset($columnMap[$sortColumn])) {
             $sortColumn = 'hit_count';
         }
         // Large hit counts and latest time stamps first
