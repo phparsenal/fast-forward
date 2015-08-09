@@ -97,7 +97,6 @@ class Settings
                 $setting = new Setting();
                 $setting->key = $key;
                 $setting->value = $this->supportedSettings[$key]['default'];
-                $setting->save();
             }
         }
         if ($returnModel || $setting === null) {
