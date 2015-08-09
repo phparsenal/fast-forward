@@ -77,8 +77,9 @@ Optional Arguments:
 		Show a list of all current settings. Save to file: ff set -l > file.txt
 ```
 e.g.
-`ff set ff.limit 20` Limit to 20 results
-`ff set -l > settings.txt` Dump settings
+
+`ff set ff.limit 20` Limit to 20 results  
+`ff set -l > settings.txt` Dump settings  
 `ff set < settings.txt` or `ff set -i settings.txt` Import settings
 
 ### Supported and default settings
