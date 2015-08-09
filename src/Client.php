@@ -54,6 +54,8 @@ class Client
         $this->settings = new Settings($this);
 
         $this->cli = new CLImate();
+        $migration = new Migration($this);
+        $migration->run();
         if (OS::isType(OS::LINUX) && $this->get(Settings::COLOR)) {
             $this->cli->forceAnsiOn();
         }
@@ -62,8 +64,6 @@ class Client
         // Prevent the previous command from being executed in case anything fails later on
         $this->batchPath = $this->folder . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
         file_put_contents($this->batchPath, '');
-        $migration = new Migration($this);
-        $migration->run();
     }
 
     /**
