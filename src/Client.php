@@ -54,7 +54,7 @@ class Client
         $this->settings = new Settings($this);
 
         $this->cli = new CLImate();
-        if (OS::isType(OS::LINUX) && $this->get('ff.color')) {
+        if (OS::isType(OS::LINUX) && $this->get(Settings::COLOR)) {
             $this->cli->forceAnsiOn();
         }
         $this->cli->description('fast-forward ' . self::FF_VERSION);

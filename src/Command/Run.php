@@ -4,6 +4,7 @@ namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Bookmark;
 use NateDrake\DateHelper\DateFormat;
+use phparsenal\fastforward\Settings;
 
 class Run extends AbstractCommand implements CommandInterface
 {
@@ -110,7 +111,7 @@ class Run extends AbstractCommand implements CommandInterface
             $query->like('shortcut', $term . '%');
         }
 
-        $sortColumn = $this->client->get('ff.sort');
+        $sortColumn = $this->client->get(Settings::SORT);
         $columnMap = Bookmark::select()->toAssoc();
         if ($sortColumn === null || !isset($columnMap[$sortColumn])) {
             $sortColumn = 'hit_count';
@@ -123,7 +124,7 @@ class Run extends AbstractCommand implements CommandInterface
         }
 
         // Don't limit when setting not set or zero
-        $maxRows = $this->client->get('ff.maxrows');
+        $maxRows = $this->client->get(Settings::LIMIT);
         if ($maxRows !== null && $maxRows !== 0) {
             $query->limit($maxRows);
         }

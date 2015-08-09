@@ -14,12 +14,18 @@ class Settings
 
     private $supportedSettings = array();
 
+    const LIMIT = 'ff.limit';
+    const SORT = 'ff.sort';
+    const INTERACTIVE = 'ff.interactive';
+    const COLOR = 'ff.color';
+    const DATABASE_VERSION = 'ff.db.version';
+
     public function __construct(Client $client)
     {
         $this->client = $client;
         $sortColumns = array_keys(Bookmark::select()->toAssoc());
         $this->supportedSettings = array(
-            'ff.maxrows' => array(
+            'ff.limit' => array(
                 'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
                 'validation' => array(v::int()->notEmpty()->min(0, true)),
                 'default' => 0,
@@ -45,15 +51,28 @@ class Settings
     /**
      * Saves a setting as a key/value pair
      *
-     * @param string $key   Any string that does not contain spaces
+     * Settings specific to fast-forward start with a `ff.` prefix.
+     *
+     * You can use the constants of this class to avoid looking up the key names.
+     *
+     * @param string $key   Unique key name.<br>
+     *                      Must contain only letters (a-z, A-Z), digits (0-9) and "."
      * @param string $value
      *
      * @throws \Exception
      */
     public function set($key, $value)
     {
-        if (strpos($key, ' ') !== false) {
-            throw new \Exception('Error while trying to save setting "' . $key . '": Key name must not contain spaces.');
+        $cli = $this->client->getCLI();
+        try {
+            v::string()
+                ->alnum('.')
+                ->noWhitespace()
+                ->notEmpty()
+                ->assert($key);
+        } catch (NestedValidationExceptionInterface $e) {
+            $cli->error($e->getFullMessage());
+            return;
         }
         $setting = $this->get($key, true);
         if ($setting === null) {
@@ -65,7 +84,7 @@ class Settings
         if (!$this->validate($setting)) {
             return;
         }
-        $cli = $this->client->getCLI();
+
         if ($oldValue === null) {
             $cli->out('Inserting new setting:')
                 ->out("$key = $value");
