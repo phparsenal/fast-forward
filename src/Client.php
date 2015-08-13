@@ -1,4 +1,5 @@
 <?php
+
 namespace phparsenal\fastforward;
 
 use League\CLImate\CLImate;
@@ -9,6 +10,7 @@ use phparsenal\fastforward\Command\Delete;
 use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
 use phparsenal\fastforward\Command\Update;
+use Symfony\Component\Console\Application;
 
 class Client
 {
@@ -66,41 +68,11 @@ class Client
         file_put_contents($this->batchPath, '');
     }
 
-    /**
-     * @param array $argv
-     */
-    public function run($argv)
+    public function run()
     {
-        $this->args = $argv;
-
-        // Build a list of available commands
-        $run = new Run($this);
-        /** @var AbstractCommand[] $commands */
-        $commands = array(
-            new Add($this),
-            new Set($this),
-            new Update($this),
-            new Delete($this),
-            $run
-        );
-        foreach ($commands as $command) {
-            $this->commands[$command->getName()] = $command;
-        }
-
-        // Look for a matching command
-        $commandFound = false;
-        if (count($this->args) > 1) {
-            $needle = $this->args[1];
-            if (isset($this->commands[$needle])) {
-                $this->commands[$needle]->run($this->args);
-                $commandFound = true;
-            }
-        }
-
-        // Otherwise run the default "run" command
-        if (!$commandFound) {
-            $run->run($this->args);
-        }
+        $application = new Application('fast-forward', self::FF_VERSION);
+        $application->add(new Add());
+        $application->run();
     }
 
     /**
