@@ -6,6 +6,7 @@ use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\AbstractCommand;
 use phparsenal\fastforward\Command\Add;
+use phparsenal\fastforward\Command\Delete;
 use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
 use Symfony\Component\Console\Application;
@@ -73,6 +74,7 @@ class Client
         $application->add($run);
         $application->setDefaultCommand($run->getName());
         $application->add(new Add());
+        $application->add(new Delete());
         $application->run();
     }
 
