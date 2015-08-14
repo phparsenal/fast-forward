@@ -1,14 +1,14 @@
 <?php
+
 namespace phparsenal\fastforward;
 
 use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\AbstractCommand;
 use phparsenal\fastforward\Command\Add;
-use phparsenal\fastforward\Command\Delete;
 use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
-use phparsenal\fastforward\Command\Update;
+use Symfony\Component\Console\Application;
 
 class Client
 {
@@ -66,41 +66,14 @@ class Client
         file_put_contents($this->batchPath, '');
     }
 
-    /**
-     * @param array $argv
-     */
-    public function run($argv)
+    public function run()
     {
-        $this->args = $argv;
-
-        // Build a list of available commands
+        $application = new Application('fast-forward', self::FF_VERSION);
         $run = new Run($this);
-        /** @var AbstractCommand[] $commands */
-        $commands = array(
-            new Add($this),
-            new Set($this),
-            new Update($this),
-            new Delete($this),
-            $run
-        );
-        foreach ($commands as $command) {
-            $this->commands[$command->getName()] = $command;
-        }
-
-        // Look for a matching command
-        $commandFound = false;
-        if (count($this->args) > 1) {
-            $needle = $this->args[1];
-            if (isset($this->commands[$needle])) {
-                $this->commands[$needle]->run($this->args);
-                $commandFound = true;
-            }
-        }
-
-        // Otherwise run the default "run" command
-        if (!$commandFound) {
-            $run->run($this->args);
-        }
+        $application->add($run);
+        $application->setDefaultCommand($run->getName());
+        $application->add(new Add());
+        $application->run();
     }
 
     /**
@@ -112,6 +85,7 @@ class Client
      * </code>
      *
      * @param int $number
+     *
      * @return string
      */
     public function ordinal($number)
@@ -150,15 +124,17 @@ class Client
     /**
      * @return Settings
      */
-    public function getSettings() {
+    public function getSettings()
+    {
         return $this->settings;
     }
 
     /**
      * Saves a setting as a key/value pair
      *
-     * @param string $key Any string that does not contain spaces
+     * @param string $key   Any string that does not contain spaces
      * @param string $value
+     *
      * @throws \Exception
      */
     public function set($key, $value)
@@ -170,8 +146,9 @@ class Client
      * Return the string or Model value for $key
      *
      * @param string $key
-     * @param bool $returnModel Returns a model instance when true
-     * @return null|string|Setting
+     * @param bool   $returnModel Returns a model instance when true
+     *
+     * @return null|string|\phparsenal\fastforward\Model\Setting
      */
     public function get($key, $returnModel = false)
     {
