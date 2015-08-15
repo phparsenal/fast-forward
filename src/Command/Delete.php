@@ -3,12 +3,11 @@
 namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Bookmark;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Delete extends Command
+class Delete extends InteractiveCommand
 {
     /**
      * Configures the current command.
