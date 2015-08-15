@@ -6,15 +6,15 @@
 
 **fast-forward** lets you remember, find and open your most used commands and folders.
 
-* [fast-forward](#fast-forward)
-    * [Setup](#setup)
-        * [Windows](#windows)
-        * [Linux](#linux)
-        * [Mac](#mac)
-    * [Usage](#usage)
-    * [Settings](#settings)
-        * [Supported and default settings](#supported-and-default-settings)
-        * [Using custom settings in commands](#using-custom-settings-in-commands)
+* [Setup](#setup)
+    * [Windows](#windows)
+    * [Linux](#linux)
+    * [Mac](#mac)
+* [Usage](#usage)
+    * [Available commands](#available-commands)
+* [Settings](#settings)
+    * [Supported and default settings](#supported-and-default-settings)
+    * [Using settings as variables in commands](#using-settings-as-variables-in-commands)
 
 ## Setup
 
@@ -54,7 +54,7 @@ n/a
 ## Usage
 Add a new command in one line:  
 
-    ff add [-c cmd] [-d desc] [-s shortcut]
+    ff add [-d|--description DESCRIPTION] [--] <shortcut> <cmd>
 
 List all available commands and execute the selection:
 
@@ -63,24 +63,49 @@ List all available commands and execute the selection:
 Searching for _htd*_
 If the only result is _htd_ it will be executed, otherwise all matches will be displayed first.
 
-    ff htd
+    ff run htd
+
+Commands can be abbreviated:
+
+    ff r htd
+
+### Available commands
+
+Command | Description 
+--------|-------------
+add     | Save a command
+delete  | Delete a command
+help    | Displays help for a command
+list    | Lists commands
+run     | Search and execute a command
+set     | Set or get variables
+update  | Update a command
+
+Show details about a command:
+
+    ff help <command>
 
 ## Settings
 
 ```
-Usage: ff [-i file, --import file] [-l, --list] [set] [key] [value]
+Usage:
+  set [options] [--] [<key>] [<value>]
 
-Optional Arguments:
-	-i file, --import file
-		Import from the specified file
-	-l, --list
-		Show a list of all current settings. Save to file: ff set -l > file.txt
+Arguments:
+  key                            Name or key of the setting
+  value                          Value to be set
+
+Options:
+  -l, --list                     Show a list of all current settings.
+  -f, --import-file=IMPORT-FILE  Import from the specified file or STDIN
+  -i, --import-stdin             Import setting via STDIN pipe
 ```
 e.g.
 
 `ff set ff.limit 20` Limit to 20 results  
 `ff set -l > settings.txt` Dump settings  
-`ff set < settings.txt` or `ff set -i settings.txt` Import settings
+`ff set -f settings.txt` Import settings from file
+`cat settings.txt | ff set -i` Import setting from STDIN
 
 ### Supported and default settings
 The following settings are supported by fast-forward:
@@ -98,7 +123,7 @@ The following settings are supported by fast-forward:
     * Enable color output on supported systems (0/1)
     * Default: 1
 
-### Using custom settings in commands
+### Using settings as variables in commands
 You can also create your own settings which can be accessed in commands:  
 `ff set location tokio`
 
