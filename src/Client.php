@@ -4,7 +4,6 @@ namespace phparsenal\fastforward;
 
 use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
-use phparsenal\fastforward\Command\AbstractCommand;
 use phparsenal\fastforward\Command\Add;
 use phparsenal\fastforward\Command\Delete;
 use phparsenal\fastforward\Command\Run;
@@ -34,11 +33,6 @@ class Client
      * @var CLImate
      */
     private $cli;
-
-    /**
-     * @var AbstractCommand[]
-     */
-    private $commands = array();
 
     /**
      * @var Settings
