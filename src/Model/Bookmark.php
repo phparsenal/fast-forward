@@ -116,7 +116,7 @@ class Bookmark extends Model
 
         // Only limit when set
         $maxRows = $client->get(Settings::LIMIT);
-        if ($maxRows !== null && $maxRows !== 0) {
+        if ($maxRows > 0) {
             $this->limit($maxRows);
         }
         return $this;

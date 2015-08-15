@@ -28,7 +28,7 @@ class Settings
             'ff.limit' => array(
                 'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
                 'validation' => array(v::int()->min(0, true)),
-                'default' => 0,
+                'default' => '0',
             ),
             'ff.sort' => array(
                 'desc' => 'Sort order of results (' . implode($sortColumns, ', ') . ')',
@@ -43,7 +43,7 @@ class Settings
             'ff.color' => array(
                 'desc' => 'Enable color output on supported systems (0/1)',
                 'validation' => array(v::in(array('0', '1'))),
-                'default' => 1,
+                'default' => '1',
             ),
         );
     }

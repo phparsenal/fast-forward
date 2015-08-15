@@ -87,7 +87,7 @@ class Client
     {
         $argv = $_SERVER['argv'];
         $input = null;
-        if ($this->get(Settings::INTERACTIVE) === '0') {
+        if (!$this->get(Settings::INTERACTIVE)) {
             if (!in_array('-n', $argv) && !in_array('--no-interaction', $argv)) {
                 $argv[] = '-n';
             }
