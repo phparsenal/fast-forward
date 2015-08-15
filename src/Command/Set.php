@@ -54,13 +54,16 @@ class Set extends InteractiveCommand
 
         $key = $input->getArgument('key');
         $value = $input->getArgument('value');
-        if ($key !== null) {
-            if ($value !== null) {
-                $this->client->set($key, $value);
-            } else {
-                $this->client->getSettings()->showSupportedSettings($key);
-            }
+        if ($key !== null && $value !== null) {
+            $this->client->set($key, $value);
+            return;
         }
+        if ($key !== null) {
+            $this->client->getSettings()->showSupportedSettings($key);
+            return;
+        }
+
+        throw new \RuntimeException('Calling this command without arguments can only be done interactively.');
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
