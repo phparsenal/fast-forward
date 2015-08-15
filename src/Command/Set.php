@@ -30,6 +30,8 @@ class Set extends InteractiveCommand
         $this->setName('set')
             ->setDescription('Set or get variables')
             ->addOption('list', 'l', InputOption::VALUE_NONE, 'Show a list of all current settings.')
+            ->addOption('default', 'd', InputOption::VALUE_NONE,
+                'Display a list of supported settings and their defaults.')
             ->addOption('import-file', 'f', InputOption::VALUE_REQUIRED, 'Import from the specified file or STDIN')
             ->addOption('import-stdin', 'i', InputOption::VALUE_NONE, 'Import setting via STDIN pipe')
             ->addArgument('key', InputArgument::OPTIONAL, 'Name or key of the setting')
@@ -42,6 +44,10 @@ class Set extends InteractiveCommand
             $this->listAll($output);
             return;
         }
+        if ($input->getOption('default')) {
+            $this->client->getSettings()->showSupportedSettings();
+            return;
+        }
         $importFile = $input->getOption('import-file');
         if ($importFile !== null) {
             $this->addLines($this->getLinesFile($importFile), $output);
@@ -51,7 +57,6 @@ class Set extends InteractiveCommand
             $this->addLines($this->getLinesStdin(), $output);
             return;
         }
-
         $key = $input->getArgument('key');
         $value = $input->getArgument('value');
         if ($key !== null && $value !== null) {
@@ -62,7 +67,6 @@ class Set extends InteractiveCommand
             $this->client->getSettings()->showSupportedSettings($key);
             return;
         }
-
         throw new \RuntimeException('Calling this command without arguments can only be done interactively.');
     }
 
