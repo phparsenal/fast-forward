@@ -10,6 +10,7 @@ use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
 use phparsenal\fastforward\Command\Update;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArgvInput;
 
 class Client
 {
@@ -72,7 +73,26 @@ class Client
         $application->add(new Delete());
         $application->add(new Set($this));
         $application->add(new Update());
-        $application->run();
+        $application->run($this->prepareArgv());
+    }
+
+    /**
+     * Returns a InputInterface imposing non-interactive mode.
+     *
+     * This will append the --no-interaction option if ff.interactive is disabled.
+     *
+     * @return ArgvInput
+     */
+    private function prepareArgv()
+    {
+        $argv = $_SERVER['argv'];
+        $input = null;
+        if ($this->get(Settings::INTERACTIVE) === '0') {
+            if (!in_array('-n', $argv) && !in_array('--no-interaction', $argv)) {
+                $argv[] = '-n';
+            }
+        }
+        return new ArgvInput($argv);
     }
 
     /**
