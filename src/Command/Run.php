@@ -2,6 +2,7 @@
 
 namespace phparsenal\fastforward\Command;
 
+use NateDrake\DateHelper\DateFormat;
 use phparsenal\fastforward\Client;
 use phparsenal\fastforward\Model\Bookmark;
 use Symfony\Component\Console\Helper\Table;
@@ -110,7 +111,7 @@ class Run extends InteractiveCommand
                 $bm->description,
                 $bm->command,
                 $bm->hit_count,
-                $bm->ts_modified,
+                $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG)
             ));
         }
         $table->render();
