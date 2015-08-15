@@ -75,6 +75,7 @@ class Client
         $application->setDefaultCommand($run->getName());
         $application->add(new Add());
         $application->add(new Delete());
+        $application->add(new Set($this));
         $application->run();
     }
 
