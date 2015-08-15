@@ -3,107 +3,43 @@
 namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Bookmark;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class Update extends AbstractCommand implements CommandInterface
+class Update extends InteractiveCommand
 {
-    protected $name = 'update';
-
-    /**
-     * @param array $argv
-     */
-    public function run($argv)
+    protected function configure()
     {
-        $this->prepareArguments();
-        $cli = $this->cli;
-        try {
-            $cli->arguments->parse();
-            $this->updateCommand();
-        } catch (\Exception $e) {
-            $cli->arguments->usage($cli, $argv);
-            $cli->error($e->getMessage());
-            $this->updateCommandInteractive();
-        }
+        $this->setName('update')
+            ->setDescription('Update a command')
+            ->addArgument('shortcut', InputArgument::REQUIRED, 'Shortcut of command to update')
+            ->addArgument('cmd', InputArgument::OPTIONAL, 'New command')
+            ->addOption('description', 'd', InputOption::VALUE_REQUIRED, 'Short description of the command');
     }
 
-    public function updateCommandInteractive()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->client->get('ff.interactive')) {
-            return;
+        $shortcut = $input->getArgument('shortcut');
+        $command = $input->getArgument('cmd');
+        $description = $input->getOption('description');
+
+        $bookmark = Bookmark::select()
+            ->where('shortcut', $shortcut)
+            ->one();
+        if ($bookmark === null) {
+            throw new \Exception("'{$shortcut}' does not exist. Please try again with a valid shortcut.");
         }
-        $this->cli->br()->whisper('Running command interactively..');
-        $bookmark = new Bookmark();
-        $tableArgMap = array();
-        if ($this->cli->arguments->get('shortcut') === '' || (!($this->cli->arguments->defined('shortcut')))) {
-            $tableArgMap['shortcut'] = 'shortcut';
-        } else {
-            $this->cli->br()->out('Updating shortcut: ' . $this->cli->arguments->get('shortcut'));
+
+        if ($command !== null) {
+            $bookmark->command = $command;
         }
-        $args = $this->cli->arguments->all();
-        $tableArgMap['command'] ='cmd';
-        $tableArgMap['description'] = 'desc';
-        foreach ($tableArgMap as $columnName => $argumentName) {
-            /** @var \League\CLImate\Argument\Argument $arg **/
-            $arg = $args[$argumentName];
-            $prefix = '';
-            if ($arg->hasPrefix()) {
-                $prefix = ' [-' . $arg->prefix() . ']';
-            }
-            $input = $this->cli->input($arg->description() . $prefix . ":");
-            $in = $input->prompt();
-            if ($argumentName == 'shortcut') {
-                $shortcut = $in;
-                $bookmark = Bookmark::select()->where('shortcut', $shortcut)->one();
-                if (!$bookmark) {
-                    $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Run ff with no parameters to view a list of available shortcuts');
-                    exit(0);
-                }
-            }
-            if (strlen($in) > 0) {
-                $bookmark->$columnName = $in;
-            }
+        if ($description !== null) {
+            $bookmark->description = $description;
         }
         $bookmark->ts_modified = time();
         $bookmark->save();
-        $this->cli->info("Bookmark " . $bookmark->shortcut . " has been updated");
-    }
-
-    public function prepareArguments()
-    {
-        $this->cli->arguments->add(
-            array(
-                'shortcut' => array(
-                    'prefix' => 's',
-                    'description' => 'Shortcut of command to update',
-                    'required' => true
-                ),
-                'cmd' => array(
-                    'prefix' => 'c',
-                    'description' => 'New command',
-                ),
-                'desc' => array(
-                    'prefix' => 'd',
-                    'description' => 'Short description of the command'
-                )
-            )
-        );
-    }
-
-    public function updateCommand()
-    {
-        $args = $this->cli->arguments;
-        $bookmark = Bookmark::select()->where('shortcut', $args->get('shortcut'))->one();
-        if (!$bookmark) {
-            $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Run ff with no parameters to view a list of available shortcuts');
-            exit(0);
-        }
-        if ($args->defined('desc')) {
-            $bookmark->description = $args->get('desc');
-        }
-        if ($args->defined('cmd')) {
-            $bookmark->command = $args->get('cmd');
-        }
-        $bookmark->ts_modified = time();
-        $bookmark->save();
-        $this->cli->info("Bookmark " . $bookmark->shortcut . " has been updated");
+        $output->writeln("Bookmark '{$shortcut}' has been updated.");
     }
 }

@@ -9,6 +9,7 @@ use phparsenal\fastforward\Command\Add;
 use phparsenal\fastforward\Command\Delete;
 use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
+use phparsenal\fastforward\Command\Update;
 use Symfony\Component\Console\Application;
 
 class Client
@@ -76,6 +77,7 @@ class Client
         $application->add(new Add());
         $application->add(new Delete());
         $application->add(new Set($this));
+        $application->add(new Update());
         $application->run();
     }
 
