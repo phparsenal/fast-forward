@@ -2,133 +2,130 @@
 
 namespace phparsenal\fastforward\Command;
 
-use phparsenal\fastforward\Model\Bookmark;
 use NateDrake\DateHelper\DateFormat;
-use phparsenal\fastforward\Settings;
+use phparsenal\fastforward\Client;
+use phparsenal\fastforward\Model\Bookmark;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
-class Run extends AbstractCommand implements CommandInterface
+class Run extends InteractiveCommand
 {
-    protected $name = 'run';
+    /** @var Client */
+    private $client;
 
-    /**
-     * @param array $argv
-     */
-    public function run($argv)
+    public function __construct(Client $client)
     {
-        $this->cli->arguments->add(
-            array(
-                'search' => array(
-                    'description' => 'Search term for the shortcut',
-                    'defaultValue' => ''
-                )
-            )
-        );
-        try {
-            $this->cli->arguments->parse();
-        } catch (\Exception $e) {
-            $this->cli->arguments->usage($this->cli, $argv);
-            $this->cli->br();
-            $this->cli->error($e->getMessage());
-            return;
-        }
-
-        // I couldn't figure out how to make CLImate "catch all" into a single argument.
-        $this->runBookmark(array_slice($argv, 1));
+        parent::__construct();
+        $this->client = $client;
     }
 
-    private function runBookmark($searchTerms)
+    protected function configure()
     {
-        $bookmarks = $this->searchBookmarks($searchTerms);
-        $bm = $this->selectBookmark($bookmarks, $searchTerms);
-        if ($bm !== null) {
-            $bm->run($this->client);
-        }
+        $this->setName('run')
+            ->setDescription('Search and execute a command')
+            ->addArgument('shortcut', InputArgument::OPTIONAL, 'Full shortcut or only beginning of it to search', '');
     }
 
-    /**
-     * @param $bookmarks
-     * @param $searchTerms
-     * @return null|Bookmark
-     * @throws \Exception
-     */
-    private function selectBookmark($bookmarks, $searchTerms)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (count($bookmarks) == 1) {
-            /** @var Bookmark $bm */
-            $bm = $bookmarks->current();
-            if (isset($searchTerms[0])) {
-                if ($bm->shortcut == $searchTerms[0]) {
-                    return $bm;
-                }
-            }
-        }
+        $shortcut = $input->getArgument('shortcut');
+        $bookmarks = Bookmark::select()
+            ->sortAndLimit($this->client)
+            ->like('shortcut', $shortcut . '%')
+            ->all()->toArray();
 
-        $map = array();
-        $i = 0;
-        $rows = array();
-        $rePattern = "/(" . implode($searchTerms, '|') . ")/i";
-        // TODO Make highlighting mode configurable
-        $highlightMode = 'invert';
-        $reReplacement = "<$highlightMode>\\1</$highlightMode>";
-        foreach ($bookmarks as $id => $bm) {
-            $map[$i] = $id;
-            $rows[] = array(
-                '#' => $i,
-                'Shortcut' => preg_replace($rePattern, $reReplacement, $bm->shortcut),
-                'Description' => $bm->description,
-                'Command' => $bm->command,
-                'Hits' => $bm->hit_count,
-                'Modified' => ($bm->ts_modified !== '') ? DateFormat::epochDate((int)$bm->ts_modified, DateFormat::BIG) : 'never'
-            );
-            $i++;
+        $match = $this->tryExactMatch($bookmarks, $shortcut);
+        if ($match === null) {
+            $match = $this->selectMatch($bookmarks, $input, $output);
         }
-        if (!(count($rows))) {
-            $this->cli->out('No bookmarks saved. You will now be prompted to add a bookmark!');
-            $add = new Add($this->client);
-            $add->run(array());
+        if ($match === null) {
+            $this->addWhenEmpty($output);
         } else {
-            $this->client->getCLI()->table($rows);
-            $input = $this->client->getCLI()->input("Which # do you want to run?");
-            $input->accept(function ($response) use ($map) {
-                return isset($map[$response]);
-            });
-            $num = $input->prompt();
-            if (isset($map[$num])) {
-                return $bookmarks[$map[$num]];
+            // Run the selected bookmark
+            $match->run($this->client);
+        }
+    }
+
+    /**
+     * @param Bookmark[] $bookmarks
+     * @param $shortcut
+     *
+     * @return null|Bookmark
+     */
+    private function tryExactMatch($bookmarks, $shortcut)
+    {
+        if (count($bookmarks) === 1) {
+            $bm = $bookmarks[0];
+            if ($bm->shortcut === $shortcut) {
+                return $bm;
             }
         }
         return null;
     }
 
     /**
-     * @param array $searchTerms
-     * @return \nochso\ORM\ResultSet
+     * @param Bookmark[]      $bookmarks
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return mixed|null
      */
-    private function searchBookmarks($searchTerms)
+    private function selectMatch($bookmarks, $input, $output)
     {
-        $query = Bookmark::select();
-        foreach ($searchTerms as $term) {
-            $query->like('shortcut', $term . '%');
+        if (count($bookmarks) === 0) {
+            return null;
         }
+        $this->listBookmarks($bookmarks, $output);
+        $helper = $this->getHelper('question');
+        $question = new Question('Enter # of command: ');
+        $answer = $helper->ask($input, $output, $question);
+        if ($answer !== null && ctype_digit($answer) && $answer >= 0 && $answer < count($bookmarks)) {
+            return $bookmarks[$answer];
+        }
+        return null;
+    }
 
-        $sortColumn = $this->client->get(Settings::SORT);
-        $columnMap = Bookmark::select()->toAssoc();
-        if (!isset($columnMap[$sortColumn])) {
-            $sortColumn = 'hit_count';
+    /**
+     * @param Bookmark[] $bookmarks
+     * @param $output
+     */
+    private function listBookmarks($bookmarks, $output)
+    {
+        $table = new Table($output);
+        $table->setHeaders(array(
+            '#',
+            'Shortcut',
+            'Description',
+            'Command',
+            'Hits',
+            'Modified',
+        ));
+        foreach ($bookmarks as $key => $bm) {
+            $table->addRow(array(
+                $key,
+                $bm->shortcut,
+                $bm->description,
+                $bm->command,
+                $bm->hit_count,
+                $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG)
+            ));
         }
-        // Large hit counts and latest time stamps first
-        if ($sortColumn === 'hit_count' || substr($sortColumn, 0, 3) === 'ts_') {
-            $query->orderDesc($sortColumn);
-        } else {
-            $query->orderAsc($sortColumn);
-        }
+        $table->render();
+    }
 
-        // Don't limit when setting not set or zero
-        $maxRows = $this->client->get(Settings::LIMIT);
-        if ($maxRows !== null && $maxRows !== 0) {
-            $query->limit($maxRows);
+    private function addWhenEmpty(OutputInterface $output)
+    {
+        if (Bookmark::select()->count() === 0) {
+            $output->writeln("You don't have any commands saved yet. Now showing the help for the add command:");
+            $output->writeln('');
+            $addCommand = $this->getApplication()->find('help');
+            $args = array('command' => 'help', 'command_name' => 'add');
+            $argsInput = new ArrayInput($args);
+            $addCommand->run($argsInput, $output);
         }
-        $bookmarks = $query->all();
-        return $bookmarks;
     }
 }

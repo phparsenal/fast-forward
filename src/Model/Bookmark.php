@@ -1,4 +1,5 @@
 <?php
+
 namespace phparsenal\fastforward\Model;
 
 use nochso\ORM\Model;
@@ -77,13 +78,13 @@ class Bookmark extends Model
      */
     public function run($client)
     {
-        $client->getCLI()->info("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . " time.");
+        $client->getCLI()->info("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . ' time.');
         $command = $client->getSettings()->parseIdentifiers($this->command);
         switch (OS::getType()) {
             case OS::LINUX:
                 // Disable Ansi to keep the output clean
                 $client->getCLI()->forceAnsiOff();
-                $client->getCLI()->br()->out("cmd:" . $command)->br();
+                $client->getCLI()->br()->out('cmd:' . $command)->br();
                 break;
             case OS::WINDOWS:
                 file_put_contents($client->getBatchPath(), $command);
@@ -91,5 +92,33 @@ class Bookmark extends Model
         }
         $this->hit_count++;
         $this->save();
+    }
+
+    /**
+     * @param Client $client
+     *
+     * @return $this
+     */
+    public function sortAndLimit($client)
+    {
+        // Make sure we have a valid column to sort by
+        $sortColumn = $client->get(Settings::SORT);
+        $columnMap = $this->toAssoc();
+        if (!isset($columnMap[$sortColumn])) {
+            $sortColumn = 'hit_count';
+        }
+        // Large hit counts and latest time stamps come first
+        if ($sortColumn === 'hit_count' || substr($sortColumn, 0, 3) === 'ts_') {
+            $this->orderDesc($sortColumn);
+        } else {
+            $this->orderAsc($sortColumn);
+        }
+
+        // Only limit when set
+        $maxRows = $client->get(Settings::LIMIT);
+        if ($maxRows !== null && $maxRows !== 0) {
+            $this->limit($maxRows);
+        }
+        return $this;
     }
 }

@@ -27,7 +27,7 @@ class Settings
         $this->supportedSettings = array(
             'ff.limit' => array(
                 'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
-                'validation' => array(v::int()->notEmpty()->min(0, true)),
+                'validation' => array(v::int()->min(0, true)),
                 'default' => 0,
             ),
             'ff.sort' => array(
@@ -37,12 +37,12 @@ class Settings
             ),
             'ff.interactive' => array(
                 'desc' => 'Ask for missing input interactively (0 never, 1 always)',
-                'validation' => array(v::in(array('0', '1'))->notEmpty()),
+                'validation' => array(v::in(array('0', '1'))),
                 'default' => '1',
             ),
             'ff.color' => array(
                 'desc' => 'Enable color output on supported systems (0/1)',
-                'validation' => array(v::in(array('0', '1'))->notEmpty()),
+                'validation' => array(v::in(array('0', '1'))),
                 'default' => 1,
             ),
         );

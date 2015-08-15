@@ -2,88 +2,32 @@
 
 namespace phparsenal\fastforward\Command;
 
-
-use nochso\ORM\Model;
 use phparsenal\fastforward\Model\Bookmark;
-use phparsenal\fastforward\Settings;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class Delete extends AbstractCommand implements CommandInterface
+class Delete extends InteractiveCommand
 {
-    protected $name = 'delete';
-
     /**
-     * @param array $argv
+     * Configures the current command.
      */
-    public function run($argv)
+    protected function configure()
     {
-        $this->prepareArguments();
-        $cli = $this->cli;
-        try {
-            $cli->arguments->parse();
-            $this->deleteCommand();
-        } catch (\Exception $e) {
-            $cli->arguments->usage($cli, $argv);
-            $cli->error($e->getMessage());
-            $this->deleteCommandInteractive();
-        }
+        $this->setName('delete')
+            ->setDescription('Delete a command')
+            ->addArgument('shortcut', InputArgument::REQUIRED, 'Shortcut of bookmark to delete');
     }
 
-    public function prepareArguments()
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->cli->arguments->add(
-            array(
-                'delete' => array(
-                    'description' => 'Command to delete a bookmark',
-                    'required' => true
-                ),
-                'shortcut' => array(
-                    'description' => 'Shortcut of bookmark to delete',
-                    'required' => true
-                ),
-            )
-        );
-    }
-
-    public function deleteCommand()
-    {
-        $bookmark = Bookmark::select()->where('shortcut', $this->cli->arguments->get('shortcut'))->all();
-        if ($bookmark->count() <= 0) {
-            $this->cli->br()->error($this->cli->arguments->get('shortcut') . ' does not exist. Please try again with a valid shortcut');
-            exit(0);
+        $shortcut = $input->getArgument('shortcut');
+        $count = Bookmark::select()->where('shortcut', $shortcut)->count();
+        if ($count === 0) {
+            $output->writeln("'{$shortcut}' does not exist. Please try again with a valid shortcut.");
+        } else {
+            Bookmark::select()->where('shortcut', $shortcut)->delete();
+            $output->writeln("<info>Bookmarks deleted: {$count}</info>");
         }
-        $bookmark->delete();
-        $this->cli->info("Bookmark " . $this->cli->arguments->get('shortcut') . " deleted successfully...");
-    }
-
-    public function deleteCommandInteractive()
-    {
-        if (!$this->client->get(Settings::INTERACTIVE)) {
-            return;
-        }
-        $this->cli->br()->whisper('Running command interactively..');
-        $args = $this->cli->arguments->all();
-        $bookmark = new Bookmark();
-        // Bookmark column/property name => CLImate argument name
-        $tableArgMap = array(
-            'shortcut' => 'shortcut'
-        );
-        foreach ($tableArgMap as $columnName => $argumentName) {
-            /** @var \League\CLImate\Argument\Argument $arg */
-            $arg = $args[$argumentName];
-            $prefix = '';
-            if ($arg->hasPrefix()) {
-                $prefix = ' [-' . $arg->prefix() . ']';
-            }
-            $input = $this->cli->input($arg->description() . $prefix . ":");
-            $shortcut = $input->prompt();
-            $bookmark = Bookmark::select()->where('shortcut', $shortcut)->one();
-            if ($bookmark === null) {
-                $this->cli->br()->error($shortcut . ' does not exist. Please try again with a valid shortcut');
-                exit(0);
-            }
-        }
-        $shortcut = $bookmark->shortcut;
-        $bookmark->delete();
-        $this->cli->info("Bookmark " . $shortcut . " deleted successfully...");
     }
 }
