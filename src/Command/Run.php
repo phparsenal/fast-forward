@@ -5,12 +5,10 @@ namespace phparsenal\fastforward\Command;
 use NateDrake\DateHelper\DateFormat;
 use phparsenal\fastforward\Client;
 use phparsenal\fastforward\Model\Bookmark;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\OutputStyle;
 
 class Run extends InteractiveCommand
 {
@@ -30,7 +28,7 @@ class Run extends InteractiveCommand
             ->addArgument('shortcut', InputArgument::OPTIONAL, 'Full shortcut or only beginning of it to search', '');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputStyle $output)
     {
         $shortcut = $input->getArgument('shortcut');
         $bookmarks = Bookmark::select()
@@ -68,9 +66,9 @@ class Run extends InteractiveCommand
     }
 
     /**
-     * @param Bookmark[]      $bookmarks
-     * @param InputInterface  $input
-     * @param OutputInterface $output
+     * @param Bookmark[]     $bookmarks
+     * @param InputInterface $input
+     * @param OutputStyle    $output
      *
      * @return mixed|null
      */
@@ -80,9 +78,7 @@ class Run extends InteractiveCommand
             return null;
         }
         $this->listBookmarks($bookmarks, $output);
-        $helper = $this->getHelper('question');
-        $question = new Question('Enter # of command: ');
-        $answer = $helper->ask($input, $output, $question);
+        $answer = $output->ask('Enter # of command to run');
         if ($answer !== null && ctype_digit($answer) && $answer >= 0 && $answer < count($bookmarks)) {
             return $bookmarks[$answer];
         }
@@ -90,38 +86,37 @@ class Run extends InteractiveCommand
     }
 
     /**
-     * @param Bookmark[] $bookmarks
-     * @param $output
+     * @param Bookmark[]  $bookmarks
+     * @param OutputStyle $output
      */
     private function listBookmarks($bookmarks, $output)
     {
-        $table = new Table($output);
-        $table->setHeaders(array(
+        $headers = array(
             '#',
             'Shortcut',
             'Description',
             'Command',
             'Hits',
             'Modified',
-        ));
+        );
+        $rows = array();
         foreach ($bookmarks as $key => $bm) {
-            $table->addRow(array(
+            $rows[] = array(
                 $key,
                 $bm->shortcut,
                 $bm->description,
                 $bm->command,
                 $bm->hit_count,
-                $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG)
-            ));
+                $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG),
+            );
         }
-        $table->render();
+        $output->table($headers, $rows);
     }
 
-    private function addWhenEmpty(OutputInterface $output)
+    private function addWhenEmpty(OutputStyle $output)
     {
         if (Bookmark::select()->count() === 0) {
-            $output->writeln("You don't have any commands saved yet. Now showing the help for the add command:");
-            $output->writeln('');
+            $output->note("You don't have any commands saved yet. Now showing the help for the add command:");
             $addCommand = $this->getApplication()->find('help');
             $args = array('command' => 'help', 'command_name' => 'add');
             $argsInput = new ArrayInput($args);

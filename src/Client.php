@@ -2,7 +2,6 @@
 
 namespace phparsenal\fastforward;
 
-use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\Add;
 use phparsenal\fastforward\Command\Delete;
@@ -11,6 +10,7 @@ use phparsenal\fastforward\Command\Set;
 use phparsenal\fastforward\Command\Update;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 class Client
 {
@@ -31,9 +31,9 @@ class Client
     private $args;
 
     /**
-     * @var CLImate
+     * @var \Symfony\Component\Console\Style\OutputStyle
      */
-    private $cli;
+    private $output;
 
     /**
      * @var Settings
@@ -50,13 +50,8 @@ class Client
         DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
         $this->settings = new Settings($this);
 
-        $this->cli = new CLImate();
         $migration = new Migration($this);
         $migration->run();
-        if (OS::isType(OS::LINUX) && $this->get(Settings::COLOR)) {
-            $this->cli->forceAnsiOn();
-        }
-        $this->cli->description('fast-forward ' . self::FF_VERSION);
 
         // Prevent the previous command from being executed in case anything fails later on
         $this->batchPath = $this->folder . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
@@ -73,7 +68,9 @@ class Client
         $application->add(new Delete());
         $application->add(new Set($this));
         $application->add(new Update());
-        $application->run($this->prepareArgv());
+        $argvIn = $this->prepareArgv();
+        $this->output = new ConsoleStyle($argvIn, new ConsoleOutput());
+        $application->run($argvIn, $this->output);
     }
 
     /**
@@ -133,14 +130,6 @@ class Client
     }
 
     /**
-     * @return CLImate
-     */
-    public function getCLI()
-    {
-        return $this->cli;
-    }
-
-    /**
      * @return Settings
      */
     public function getSettings()
@@ -172,5 +161,13 @@ class Client
     public function get($key, $returnModel = false)
     {
         return $this->settings->get($key, $returnModel);
+    }
+
+    /**
+     * @return \Symfony\Component\Console\Style\OutputStyle
+     */
+    public function getOutput()
+    {
+        return $this->output;
     }
 }

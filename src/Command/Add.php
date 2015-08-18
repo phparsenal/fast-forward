@@ -3,11 +3,10 @@
 namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Model\Bookmark;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\OutputStyle;
 
 class Add extends InteractiveCommand
 {
@@ -21,13 +20,16 @@ class Add extends InteractiveCommand
                 'Short description of what the command does', '');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputStyle $output)
     {
         $bookmark = new Bookmark();
         $bookmark->command = $input->getArgument('cmd');
         $bookmark->shortcut = $input->getArgument('shortcut');
         $bookmark->description = $input->getOption('description');
         $bookmark->save();
-        $output->writeln('New bookmark was saved: ' . $bookmark->shortcut);
+        $output->writeln('   Shortcut: ' . $bookmark->shortcut);
+        $output->writeln('    Command: ' . $bookmark->command);
+        $output->writeln('Description: ' . $bookmark->description);
+        $output->success('Bookmark added.');
     }
 }

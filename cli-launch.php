@@ -12,8 +12,6 @@ try {
     $client->init();
     $client->run($argv);
 } catch (\Exception $e) {
-    $client->getCLI()
-        ->br()
-        ->error('<bold>' . $e->getMessage() . '</bold>')
-        ->error($e->getTraceAsString());
+    $msg = array($e->getMessage(), $e->getTraceAsString());
+    $client->getOutput()->error($msg);
 }

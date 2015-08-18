@@ -6,7 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\OutputStyle;
 
 /**
  * InteractiveCommand will ask for missing parameters when run interactively.
@@ -20,10 +20,10 @@ class InteractiveCommand extends Command
      * This means that this is the only place where the command can
      * interactively ask for values of missing required arguments.
      *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
+     * @param InputInterface $input  An InputInterface instance
+     * @param OutputStyle    $output An OutputInterface instance
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputStyle $output)
     {
         $definition = $this->getDefinition();
         foreach ($definition->getArguments() as $argument) {
@@ -34,17 +34,15 @@ class InteractiveCommand extends Command
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param InputArgument   $argument
+     * @param InputInterface $input
+     * @param OutputStyle    $output
+     * @param InputArgument  $argument
      */
-    protected function promptMissingArgument(InputInterface $input, OutputInterface $output, $argument)
+    protected function promptMissingArgument(InputInterface $input, OutputStyle $output, $argument)
     {
-        $helper = $this->getHelper('question');
-        $question = new Question($argument->getDescription() . ': ', $argument->getDefault());
         $hasArgument = false;
         while (!$hasArgument) {
-            $answer = $helper->ask($input, $output, $question);
+            $answer = $output->ask($argument->getDescription(), $argument->getDefault());
             if ($answer !== null) {
                 $hasArgument = true;
                 $input->setArgument($argument->getName(), $answer);

@@ -5,7 +5,7 @@ namespace phparsenal\fastforward\Command;
 use phparsenal\fastforward\Model\Bookmark;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\OutputStyle;
 
 class Delete extends InteractiveCommand
 {
@@ -19,15 +19,15 @@ class Delete extends InteractiveCommand
             ->addArgument('shortcut', InputArgument::REQUIRED, 'Shortcut of bookmark to delete');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputStyle $output)
     {
         $shortcut = $input->getArgument('shortcut');
         $count = Bookmark::select()->where('shortcut', $shortcut)->count();
         if ($count === 0) {
-            $output->writeln("'{$shortcut}' does not exist. Please try again with a valid shortcut.");
+            $output->error("Command '{$shortcut}' does not exist");
         } else {
             Bookmark::select()->where('shortcut', $shortcut)->delete();
-            $output->writeln("<info>Bookmarks deleted: {$count}</info>");
+            $output->success("$count bookmark" . ($count != 1 ? 's' : '') . ' deleted.');
         }
     }
 }

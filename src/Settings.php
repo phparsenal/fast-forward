@@ -63,7 +63,7 @@ class Settings
      */
     public function set($key, $value)
     {
-        $cli = $this->client->getCLI();
+        $out = $this->client->getOutput();
         try {
             v::string()
                 ->alnum('.')
@@ -71,7 +71,7 @@ class Settings
                 ->notEmpty()
                 ->assert($key);
         } catch (NestedValidationExceptionInterface $e) {
-            $cli->error($e->getFullMessage());
+            $out->error($e->getFullMessage());
             return;
         }
         $setting = $this->get($key, true);
@@ -86,14 +86,11 @@ class Settings
         }
 
         if ($oldValue === null) {
-            $cli->out('Inserting new setting:')
-                ->out("$key = $value");
+            $out->writeln("Inserting new setting:\n$key = $value");
         } elseif ($oldValue !== $value) {
-            $cli->out('Changing setting:')
-                ->out("$key = {$oldValue} --> <bold>$value</bold>");
+            $out->writeln("Changing setting:\n$key = {$oldValue} --> <bold>$value</bold>");
         } else {
-            $cli->out('Setting already up-to-date:')
-                ->out("$key = $value");
+            $out->writeln("Setting already up-to-date:\n$key = $value");
         }
         $setting->save();
     }
@@ -143,7 +140,7 @@ class Settings
             try {
                 $validator->assert($setting->value);
             } catch (NestedValidationExceptionInterface $exception) {
-                $this->client->getCLI()->error($exception->getFullMessage());
+                $this->client->getOutput()->error($exception->getFullMessage());
                 return false;
             }
         }
@@ -169,21 +166,22 @@ class Settings
             ->in('key', array_keys($settings))
             ->all();
 
-        $cli = $this->client->getCLI();
-        $cli->br();
-        $cli->info('Supported settings [default]:');
+        $out = $this->client->getOutput();
+        $out->section('Supported settings [default]');
 
+        $items = array();
         foreach ($settings as $key => $info) {
-            $cli->inline($key);
+            $out->write($key);
             if (isset($currentSettings[$key])) {
-                $cli->inline(' = <bold>' . $currentSettings[$key]->value . '</bold>');
+                $out->write(' = ' . $currentSettings[$key]->value);
             }
             if (isset($info['default'])) {
-                $cli->inline(' [' . $info['default'] . ']');
+                $out->write(' [' . $info['default'] . ']');
             }
-            $cli->br()->tab()->out($info['desc']);
+            $out->newLine();
+            $out->writeln($info['desc']);
+            $out->newLine();
         }
-        $cli->br();
     }
 
     /**

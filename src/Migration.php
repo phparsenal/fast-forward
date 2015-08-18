@@ -2,8 +2,8 @@
 
 namespace phparsenal\fastforward;
 
-use League\CLImate\CLImate;
 use nochso\ORM\DBA\DBA;
+use Symfony\Component\Console\Style\OutputStyle;
 
 /**
  * Class Migration
@@ -18,9 +18,9 @@ class Migration
     private $client;
 
     /**
-     * @var CLImate
+     * @var OutputStyle
      */
-    private $cli;
+    private $out;
 
     /**
      * @param Client $client
@@ -28,7 +28,7 @@ class Migration
     public function __construct($client)
     {
         $this->client = $client;
-        $this->cli = $this->client->getCLI();
+        $this->out = $this->client->getOutput();
     }
 
     /**
@@ -51,7 +51,7 @@ class Migration
         }
         if ($migrated) {
             $this->saveDatabaseVersion();
-            $this->cli->out("Updated the database to version " . Client::FF_VERSION);
+            $this->out->success("Updated the database to version " . Client::FF_VERSION);
         }
     }
 
@@ -67,7 +67,7 @@ class Migration
         if (version_compare($version, Client::FF_VERSION) !== -1) {
             return false;
         }
-        $this->cli->out("Current database version is " . Client::FF_VERSION);
+        $this->out->writeln("Current database version is " . Client::FF_VERSION);
 
         // New migrations go here >>>
 
@@ -81,7 +81,7 @@ class Migration
      */
     private function fromUnversioned()
     {
-        $this->cli->out("Updating database from unknown version");
+        $this->out->writeln("Updating database from unknown version");
         // There's already a bookmark table, but no settings yet.
         // Basically the state of the project as this was written.
         $sql = '
@@ -101,9 +101,9 @@ class Migration
      */
     private function fromBlank()
     {
-        $this->cli->out("No database found. Setting up a fresh one.");
+        $this->out->note("No database found. Setting up a fresh one.");
         $setupStatements = $this->getBlankStatements();
-        $progress = $this->cli->progress()->total(count($setupStatements));
+        $progress = $this->out->progress()->total(count($setupStatements));
         $progress->current(0);
         foreach ($setupStatements as $key => $singleSql) {
             $singleSql = trim($singleSql);

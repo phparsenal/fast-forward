@@ -6,7 +6,7 @@ use phparsenal\fastforward\Model\Bookmark;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\OutputStyle;
 
 class Update extends InteractiveCommand
 {
@@ -19,7 +19,7 @@ class Update extends InteractiveCommand
             ->addOption('description', 'd', InputOption::VALUE_REQUIRED, 'Short description of the command');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputStyle $output)
     {
         $shortcut = $input->getArgument('shortcut');
         $command = $input->getArgument('cmd');
@@ -40,6 +40,9 @@ class Update extends InteractiveCommand
         }
         $bookmark->ts_modified = time();
         $bookmark->save();
-        $output->writeln("Bookmark '{$shortcut}' has been updated.");
+        $output->writeln('   Shortcut: ' . $bookmark->shortcut);
+        $output->writeln('    Command: ' . $bookmark->command);
+        $output->writeln('Description: ' . $bookmark->description);
+        $output->success('Bookmark updated.');
     }
 }
