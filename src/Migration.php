@@ -103,8 +103,7 @@ class Migration
     {
         $this->out->note("No database found. Setting up a fresh one.");
         $setupStatements = $this->getBlankStatements();
-        $progress = $this->out->progress()->total(count($setupStatements));
-        $progress->current(0);
+        $this->out->progressStart(count($setupStatements));
         foreach ($setupStatements as $key => $singleSql) {
             $singleSql = trim($singleSql);
             try {
@@ -114,8 +113,9 @@ class Migration
                 $msg = "SQL error: " . $e->getMessage() . "\nWhile trying to execute:\n$singleSql";
                 throw new \Exception($msg);
             }
-            $progress->current($key + 1);
+            $this->out->progressAdvance();
         }
+        $this->out->progressFinish();
         return true;
     }
 

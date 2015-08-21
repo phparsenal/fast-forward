@@ -49,6 +49,7 @@ class Client extends Application
     {
         parent::__construct($name, $version);
 
+        $this->output = new ConsoleStyle(new ArgvInput(), new ConsoleOutput());
         $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
         DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
