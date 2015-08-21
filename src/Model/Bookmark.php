@@ -78,6 +78,7 @@ class Bookmark extends Model
      */
     public function run($client)
     {
+        $this->hit_count++;
         $client->getCLI()->info("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . ' time.');
         $command = $client->getSettings()->parseIdentifiers($this->command);
         switch (OS::getType()) {
@@ -90,7 +91,6 @@ class Bookmark extends Model
                 file_put_contents($client->getBatchPath(), $command);
                 break;
         }
-        $this->hit_count++;
         $this->save();
     }
 
