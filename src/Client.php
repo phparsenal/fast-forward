@@ -10,9 +10,11 @@ use phparsenal\fastforward\Command\Set;
 use phparsenal\fastforward\Command\Update;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class Client
+class Client extends Application
 {
     const FF_VERSION = '0.1.0';
     /**
@@ -58,20 +60,48 @@ class Client
         file_put_contents($this->batchPath, '');
     }
 
-    public function run()
+
+    /**
+     * Runs the current application.
+     *
+     * @param InputInterface $input An Input instance
+     * @param OutputInterface $output An Output instance
+     *
+     * @return int 0 if everything went fine, or an error code
+     *
+     * @throws \Exception When doRun returns Exception
+     *
+     * @api
+     */
+    public function run(InputInterface $input = null, OutputInterface $output = null)
     {
-        $application = new Application('fast-forward', self::FF_VERSION);
-        $run = new Run($this);
-        $application->add($run);
-        $application->setDefaultCommand($run->getName());
-        $application->add(new Add());
-        $application->add(new Delete());
-        $application->add(new Set($this));
-        $application->add(new Update());
-        $argvIn = $this->prepareArgv();
-        $this->output = new ConsoleStyle($argvIn, new ConsoleOutput());
-        $application->run($argvIn, $this->output);
+        if (null === $input) {
+            $input = new ArgvInput();
+        }
+
+        if (null === $output) {
+            $output = new ConsoleStyle($input, new ConsoleOutput());
+        }
+        return parent::run($input, $output);
     }
+
+    /**
+     * Gets the default commands that should always be available.
+     *
+     * @return Command[] An array of default Command instances
+     */
+    protected function getDefaultCommands()
+    {
+        $defaults = array(
+            new Run($this),
+            new Add(),
+            new Delete(),
+            new Set($this),
+            new Update()
+        );
+        return array_merge(parent::getDefaultCommands(), $defaults);
+    }
+
 
     /**
      * Returns a InputInterface imposing non-interactive mode.
@@ -84,7 +114,7 @@ class Client
     {
         $argv = $_SERVER['argv'];
         $input = null;
-        if (!$this->get(Settings::INTERACTIVE)) {
+        if (!$this->getSetting(Settings::INTERACTIVE)) {
             if (!in_array('-n', $argv) && !in_array('--no-interaction', $argv)) {
                 $argv[] = '-n';
             }
@@ -145,7 +175,7 @@ class Client
      *
      * @throws \Exception
      */
-    public function set($key, $value)
+    public function setSetting($key, $value)
     {
         $this->settings->set($key, $value);
     }
@@ -158,7 +188,7 @@ class Client
      *
      * @return null|string|\phparsenal\fastforward\Model\Setting
      */
-    public function get($key, $returnModel = false)
+    public function getSetting($key, $returnModel = false)
     {
         return $this->settings->get($key, $returnModel);
     }

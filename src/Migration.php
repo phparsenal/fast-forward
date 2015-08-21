@@ -152,7 +152,7 @@ class Migration
     public function getDatabaseVersion()
     {
         try {
-            return $this->client->get(Settings::DATABASE_VERSION);
+            return $this->client->getSetting(Settings::DATABASE_VERSION);
         } catch (\PDOException $e) {
             return null;
         }
@@ -160,7 +160,7 @@ class Migration
 
     private function saveDatabaseVersion()
     {
-        $this->client->set(Settings::DATABASE_VERSION, Client::FF_VERSION);
+        $this->client->setSetting(Settings::DATABASE_VERSION, Client::FF_VERSION);
     }
 
     /**

@@ -60,7 +60,7 @@ class Set extends InteractiveCommand
         $key = $input->getArgument('key');
         $value = $input->getArgument('value');
         if ($key !== null && $value !== null) {
-            $this->client->set($key, $value);
+            $this->client->setSetting($key, $value);
             return;
         }
         if ($key !== null) {
@@ -130,7 +130,7 @@ class Set extends InteractiveCommand
     {
         foreach ($lines as $line) {
             if (preg_match('/^([^ ]+) (.*)/', $line, $matches)) {
-                $this->client->set($matches[1], $matches[2]);
+                $this->client->setSetting($matches[1], $matches[2]);
             } elseif (trim($line) !== '') {
                 $output->writeln('Line ignored: ' . $line);
             }

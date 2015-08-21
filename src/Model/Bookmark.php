@@ -101,7 +101,7 @@ class Bookmark extends Model
     public function sortAndLimit($client)
     {
         // Make sure we have a valid column to sort by
-        $sortColumn = $client->get(Settings::SORT);
+        $sortColumn = $client->getSetting(Settings::SORT);
         $columnMap = $this->toAssoc();
         if (!isset($columnMap[$sortColumn])) {
             $sortColumn = 'hit_count';
@@ -114,7 +114,7 @@ class Bookmark extends Model
         }
 
         // Only limit when set
-        $maxRows = $client->get(Settings::LIMIT);
+        $maxRows = $client->getSetting(Settings::LIMIT);
         if ($maxRows > 0) {
             $this->limit($maxRows);
         }
