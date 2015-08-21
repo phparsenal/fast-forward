@@ -28,11 +28,6 @@ class Client extends Application
     private $batchPath;
 
     /**
-     * @var array
-     */
-    private $args;
-
-    /**
      * @var \Symfony\Component\Console\Style\OutputStyle
      */
     private $output;
