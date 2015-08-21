@@ -102,26 +102,6 @@ class Client extends Application
         return array_merge(parent::getDefaultCommands(), $defaults);
     }
 
-
-    /**
-     * Returns a InputInterface imposing non-interactive mode.
-     *
-     * This will append the --no-interaction option if ff.interactive is disabled.
-     *
-     * @return ArgvInput
-     */
-    private function prepareArgv()
-    {
-        $argv = $_SERVER['argv'];
-        $input = null;
-        if (!$this->getSetting(Settings::INTERACTIVE)) {
-            if (!in_array('-n', $argv) && !in_array('--no-interaction', $argv)) {
-                $argv[] = '-n';
-            }
-        }
-        return new ArgvInput($argv);
-    }
-
     /**
      * Converts an integer to its ordinal number
      *

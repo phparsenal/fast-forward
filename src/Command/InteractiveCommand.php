@@ -2,10 +2,11 @@
 
 namespace phparsenal\fastforward\Command;
 
+use phparsenal\fastforward\Client;
+use phparsenal\fastforward\Settings;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\OutputStyle;
 
 /**
@@ -25,6 +26,9 @@ class InteractiveCommand extends Command
      */
     protected function interact(InputInterface $input, OutputStyle $output)
     {
+        if (!$this->getApplication()->getSetting(Settings::INTERACTIVE)) {
+            return;
+        }
         $definition = $this->getDefinition();
         foreach ($definition->getArguments() as $argument) {
             if ($input->getArgument($argument->getName()) === null) {
@@ -50,5 +54,17 @@ class InteractiveCommand extends Command
                 $hasArgument = true;
             }
         }
+    }
+
+    /**
+     * Gets the application instance for this command.
+     *
+     * This is to make sure we get hinting for Client, not just Application.
+     *
+     * @return Client An Application instance
+     */
+    public function getApplication()
+    {
+        return parent::getApplication();
     }
 }
