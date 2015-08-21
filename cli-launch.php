@@ -11,7 +11,6 @@ if ($argc > 0) {
 
 $client = new Client('fast-forward', Client::FF_VERSION);
 try {
-    $client->init();
     $client->run();
 } catch (\Exception $e) {
     $msg = array($e->getMessage(), $e->getTraceAsString());

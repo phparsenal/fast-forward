@@ -38,10 +38,17 @@ class Client extends Application
     private $settings;
 
     /**
-     * Get folder path and connect to the database
+     * Constructor.
+     *
+     * @param string $name The name of the application
+     * @param string $version The version of the application
+     *
+     * @api
      */
-    public function init()
+    public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
     {
+        parent::__construct($name, $version);
+
         $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
         DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
@@ -54,7 +61,6 @@ class Client extends Application
         $this->batchPath = $this->folder . DIRECTORY_SEPARATOR . 'cli-launch.temp.bat';
         file_put_contents($this->batchPath, '');
     }
-
 
     /**
      * Runs the current application.
