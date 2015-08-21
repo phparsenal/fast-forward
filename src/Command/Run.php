@@ -12,15 +12,6 @@ use Symfony\Component\Console\Style\OutputStyle;
 
 class Run extends InteractiveCommand
 {
-    /** @var Client */
-    private $client;
-
-    public function __construct(Client $client)
-    {
-        parent::__construct();
-        $this->client = $client;
-    }
-
     protected function configure()
     {
         $this->setName('run')
@@ -32,7 +23,7 @@ class Run extends InteractiveCommand
     {
         $shortcut = $input->getArgument('shortcut');
         $bookmarks = Bookmark::select()
-            ->sortAndLimit($this->client)
+            ->sortAndLimit($this->getApplication())
             ->like('shortcut', $shortcut . '%')
             ->all()->toArray();
 
@@ -44,7 +35,7 @@ class Run extends InteractiveCommand
             $this->addWhenEmpty($output);
         } else {
             // Run the selected bookmark
-            $match->run($this->client);
+            $match->run($this->getApplication(), $output);
         }
     }
 

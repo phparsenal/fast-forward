@@ -6,6 +6,7 @@ use nochso\ORM\Model;
 use phparsenal\fastforward\Client;
 use phparsenal\fastforward\OS;
 use phparsenal\fastforward\Settings;
+use Symfony\Component\Console\Style\OutputStyle;
 
 class Bookmark extends Model
 {
@@ -75,16 +76,17 @@ class Bookmark extends Model
 
     /**
      * @param Client $client
+     * @param OutputStyle $output
+     * @throws \Exception
      */
-    public function run($client)
+    public function run($client, OutputStyle $output)
     {
         $this->hit_count++;
-        $client->getOutput()->success("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count)
-            . ' time.');
+        $output->success("Running '" . $this->shortcut . "' for the " . $client->ordinal($this->hit_count) . ' time.');
         $command = $client->getSettings()->parseIdentifiers($this->command);
         switch (OS::getType()) {
             case OS::LINUX:
-                $client->getOutput()->writeln('cmd:' . $command);
+                $output->writeln('cmd:' . $command);
                 break;
             case OS::WINDOWS:
                 file_put_contents($client->getBatchPath(), $command);

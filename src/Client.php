@@ -93,10 +93,10 @@ class Client extends Application
     protected function getDefaultCommands()
     {
         $defaults = array(
-            new Run($this),
+            new Run(),
             new Add(),
             new Delete(),
-            new Set($this),
+            new Set(),
             new Update()
         );
         return array_merge(parent::getDefaultCommands(), $defaults);
