@@ -86,9 +86,9 @@ class Settings
         }
 
         if ($oldValue === null) {
-            $out->writeln("Inserting new setting:\n$key = $value");
+            $out->writeln("Inserting new setting:\n$key = <options=bold>$value</>");
         } elseif ($oldValue !== $value) {
-            $out->writeln("Changing setting:\n$key = {$oldValue} --> <bold>$value</bold>");
+            $out->writeln("Changing setting:\n$key = {$oldValue} --> <options=bold>$value</>");
         } else {
             $out->writeln("Setting already up-to-date:\n$key = $value");
         }

@@ -82,6 +82,7 @@ class Client extends Application
         if (null === $output) {
             $output = new ConsoleStyle($input, new ConsoleOutput());
         }
+        $this->output = $output;
         return parent::run($input, $output);
     }
 
