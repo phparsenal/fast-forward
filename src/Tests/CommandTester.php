@@ -11,7 +11,7 @@
 
 namespace phparsenal\fastforward\Tests;
 
-use phparsenal\fastforward\ConsoleStyle;
+use phparsenal\fastforward\Console\ConsoleStyle;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\StreamOutput;

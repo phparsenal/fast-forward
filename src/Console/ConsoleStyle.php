@@ -1,6 +1,6 @@
 <?php
 
-namespace phparsenal\fastforward;
+namespace phparsenal\fastforward\Console;
 
 use Symfony\Component\Console\Style\SymfonyStyle;
 

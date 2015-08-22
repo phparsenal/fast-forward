@@ -10,6 +10,7 @@ use phparsenal\fastforward\Command\Import;
 use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
 use phparsenal\fastforward\Command\Update;
+use phparsenal\fastforward\Console\ConsoleStyle;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;

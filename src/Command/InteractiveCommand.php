@@ -3,7 +3,7 @@
 namespace phparsenal\fastforward\Command;
 
 use phparsenal\fastforward\Client;
-use phparsenal\fastforward\ConsoleStyle;
+use phparsenal\fastforward\Console\ConsoleStyle;
 use phparsenal\fastforward\Settings;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
