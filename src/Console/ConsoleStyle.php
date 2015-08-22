@@ -48,4 +48,15 @@ class ConsoleStyle extends SymfonyStyle
     {
         $this->block($message, 'CAUTION', 'fg=red', ' ', true);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function table(array $headers, array $rows)
+    {
+        $table = new Table($this);
+        $table->setHeaders($headers);
+        $table->addRows($rows);
+        $table->render();
+    }
 }
