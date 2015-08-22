@@ -97,6 +97,7 @@ Arguments:
 
 Options:
   -l, --list                     Show a list of all current settings.
+  -d, --default                  Display a list of supported settings and their defaults.
   -f, --import-file=IMPORT-FILE  Import from the specified file or STDIN
   -i, --import-stdin             Import setting via STDIN pipe
 ```
