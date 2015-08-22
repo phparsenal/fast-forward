@@ -51,7 +51,7 @@ class Migration
         }
         if ($migrated) {
             $this->saveDatabaseVersion();
-            $this->out->success("Updated the database to version " . Client::FF_VERSION);
+            $this->out->success('Updated the database to version ' . Client::FF_VERSION);
         }
     }
 
@@ -67,7 +67,7 @@ class Migration
         if (version_compare($version, Client::FF_VERSION) !== -1) {
             return false;
         }
-        $this->out->writeln("Current database version is " . Client::FF_VERSION);
+        $this->out->writeln('Current database version is ' . Client::FF_VERSION);
 
         // New migrations go here >>>
 
@@ -81,7 +81,7 @@ class Migration
      */
     private function fromUnversioned()
     {
-        $this->out->writeln("Updating database from unknown version");
+        $this->out->writeln('Updating database from unknown version');
         // There's already a bookmark table, but no settings yet.
         // Basically the state of the project as this was written.
         $sql = '
@@ -97,11 +97,12 @@ class Migration
      * Initial setup of an empty database
      *
      * @return bool True when a migration happened
+     *
      * @throws \Exception
      */
     private function fromBlank()
     {
-        $this->out->note("No database found. Setting up a fresh one.");
+        $this->out->note('No database found. Setting up a fresh one.');
         $setupStatements = $this->getBlankStatements();
         $this->out->progressStart(count($setupStatements));
         foreach ($setupStatements as $key => $singleSql) {
@@ -110,7 +111,7 @@ class Migration
                 $statement = DBA::prepare($singleSql);
                 $statement->execute();
             } catch (\PDOException $e) {
-                $msg = "SQL error: " . $e->getMessage() . "\nWhile trying to execute:\n$singleSql";
+                $msg = 'SQL error: ' . $e->getMessage() . "\nWhile trying to execute:\n$singleSql";
                 throw new \Exception($msg);
             }
             $this->out->progressAdvance();
@@ -123,11 +124,12 @@ class Migration
      * Returns a list of SQL statements to completely set up an empty database
      *
      * @return string[]
+     *
      * @throws \Exception
      */
     private function getBlankStatements()
     {
-        $schemaPath = "asset/model.sql";
+        $schemaPath = 'asset/model.sql';
         if (!is_file($schemaPath)) {
             throw new \Exception("Schema file could not be found: \"$schemaPath\"\nPlease make sure that you have this file.");
         }
@@ -170,9 +172,8 @@ class Migration
      */
     private function hasTables()
     {
-        $sql = "SELECT COUNT(*) FROM sqlite_master";
+        $sql = 'SELECT COUNT(*) FROM sqlite_master';
         $count = (int)DBA::execute($sql)->fetchColumn();
         return $count !== 0;
     }
-
 }

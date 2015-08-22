@@ -11,6 +11,7 @@ class OS
      * Returns true when the constant matches the running operating system
      *
      * @param int $const
+     *
      * @return bool
      */
     public static function isType($const)
@@ -22,6 +23,7 @@ class OS
      * Returns the constant of the running operating system
      *
      * @return int
+     *
      * @throws \Exception
      */
     public static function getType()

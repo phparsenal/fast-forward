@@ -1,4 +1,5 @@
 <?php
+
 namespace phparsenal\fastforward;
 
 class ClientTest extends \PHPUnit_Framework_TestCase
@@ -31,12 +32,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testOrdinalNumber()
     {
         $expected = array(
-            "1st" => 1,
-            "2nd" => 2,
-            "3rd" => 3,
-            "4th" => 4,
-            "11th" => 11,
-            "21st" => 21
+            '1st' => 1,
+            '2nd' => 2,
+            '3rd' => 3,
+            '4th' => 4,
+            '11th' => 11,
+            '21st' => 21,
         );
         foreach ($expected as $exp => $value) {
             $result = $this->client->ordinal($value);

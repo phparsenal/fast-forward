@@ -2,7 +2,6 @@
 
 namespace phparsenal\fastforward\Model;
 
-
 use nochso\ORM\Model;
 
 class Setting extends Model
@@ -12,5 +11,4 @@ class Setting extends Model
 
     public $key;
     public $value;
-
 }

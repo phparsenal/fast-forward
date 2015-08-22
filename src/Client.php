@@ -40,7 +40,7 @@ class Client extends Application
     /**
      * Constructor.
      *
-     * @param string $name The name of the application
+     * @param string $name    The name of the application
      * @param string $version The version of the application
      *
      * @api
@@ -67,7 +67,7 @@ class Client extends Application
     /**
      * Runs the current application.
      *
-     * @param InputInterface $input An Input instance
+     * @param InputInterface  $input  An Input instance
      * @param OutputInterface $output An Output instance
      *
      * @return int 0 if everything went fine, or an error code
@@ -101,7 +101,7 @@ class Client extends Application
             new Add(),
             new Delete(),
             new Set(),
-            new Update()
+            new Update(),
         );
         return array_merge(parent::getDefaultCommands(), $defaults);
     }

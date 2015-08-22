@@ -3,7 +3,6 @@
 namespace phparsenal\fastforward\Command;
 
 use NateDrake\DateHelper\DateFormat;
-use phparsenal\fastforward\Client;
 use phparsenal\fastforward\Model\Bookmark;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;

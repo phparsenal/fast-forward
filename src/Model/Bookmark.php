@@ -75,8 +75,9 @@ class Bookmark extends Model
     }
 
     /**
-     * @param Client $client
+     * @param Client      $client
      * @param OutputStyle $output
+     *
      * @throws \Exception
      */
     public function run($client, OutputStyle $output)

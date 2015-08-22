@@ -2,7 +2,6 @@
 
 namespace phparsenal\fastforward\Command;
 
-use phparsenal\fastforward\Client;
 use phparsenal\fastforward\Model\Setting;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

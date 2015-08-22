@@ -105,8 +105,8 @@ e.g.
 
 `ff set ff.limit 20` Limit to 20 results  
 `ff set -l > settings.txt` Dump settings  
-`ff set -f settings.txt` Import settings from file
-`cat settings.txt | ff set -i` Import setting from STDIN
+`ff set -f settings.txt` Import settings from file  
+`cat settings.txt | ff set -i` Import setting from STDIN  
 
 ### Supported and default settings
 The following settings are supported by fast-forward:
