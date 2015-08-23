@@ -53,6 +53,7 @@ class RunTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string $shortcut
+     *
      * @return Bookmark
      */
     private function insertBookmark($shortcut)

@@ -7,7 +7,7 @@ use phparsenal\fastforward\Model\Bookmark;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Style\OutputStyle;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class Run extends InteractiveCommand
 {
@@ -18,7 +18,7 @@ class Run extends InteractiveCommand
             ->addArgument('shortcut', InputArgument::OPTIONAL, 'Full shortcut or only beginning of it to search', '');
     }
 
-    protected function execute(InputInterface $input, OutputStyle $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $shortcut = $input->getArgument('shortcut');
         $bookmarks = Bookmark::select()
@@ -28,15 +28,15 @@ class Run extends InteractiveCommand
 
         $match = $this->tryExactMatch($bookmarks, $shortcut);
         if ($match === null) {
-            $match = $this->selectMatch($bookmarks, $input, $output);
+            $match = $this->selectMatch($bookmarks);
         }
         if ($match === null) {
-            if (!$this->addWhenEmpty($output)) {
-                $output->note("There are no bookmarks matching shortcut: '" . $shortcut . "'");
+            if (!$this->addWhenEmpty()) {
+                $this->out->note("There are no bookmarks matching shortcut: '" . $shortcut . "'");
             }
         } else {
             // Run the selected bookmark
-            $match->run($this->getApplication(), $output);
+            $match->run($this->getApplication(), $this->out);
         }
     }
 
@@ -58,19 +58,17 @@ class Run extends InteractiveCommand
     }
 
     /**
-     * @param Bookmark[]     $bookmarks
-     * @param InputInterface $input
-     * @param OutputStyle    $output
+     * @param Bookmark[] $bookmarks
      *
      * @return mixed|null
      */
-    private function selectMatch($bookmarks, $input, $output)
+    private function selectMatch($bookmarks)
     {
         if (count($bookmarks) === 0) {
             return null;
         }
-        $this->listBookmarks($bookmarks, $output);
-        $answer = $output->ask('Enter # of command to run');
+        $this->listBookmarks($bookmarks);
+        $answer = $this->out->ask('Enter # of command to run');
         if ($answer !== null && ctype_digit($answer) && $answer >= 0 && $answer < count($bookmarks)) {
             return $bookmarks[$answer];
         }
@@ -78,10 +76,9 @@ class Run extends InteractiveCommand
     }
 
     /**
-     * @param Bookmark[]  $bookmarks
-     * @param OutputStyle $output
+     * @param Bookmark[] $bookmarks
      */
-    private function listBookmarks($bookmarks, $output)
+    private function listBookmarks($bookmarks)
     {
         $headers = array(
             '#',
@@ -102,22 +99,22 @@ class Run extends InteractiveCommand
                 $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG),
             );
         }
-        $output->table($headers, $rows);
+        $this->out->table($headers, $rows);
     }
 
     /**
-     * @param OutputStyle $output
      * @return bool True when there are no bookmarks.
+     *
      * @throws \Exception
      */
-    private function addWhenEmpty(OutputStyle $output)
+    private function addWhenEmpty()
     {
         if (Bookmark::select()->count() === 0) {
-            $output->note("You don't have any commands saved yet. Now showing the help for the add command:");
+            $this->out->note("You don't have any commands saved yet. Now showing the help for the add command:");
             $addCommand = $this->getApplication()->find('help');
             $args = array('command' => 'help', 'command_name' => 'add');
             $argsInput = new ArrayInput($args);
-            $addCommand->run($argsInput, $output);
+            $addCommand->run($argsInput, $this->out);
             return true;
         }
         return false;
