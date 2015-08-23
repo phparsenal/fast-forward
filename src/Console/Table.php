@@ -177,11 +177,9 @@ class Table
      *
      * This will keep $maxLines in mind.
      *
-     * @param int $spread
-     *
      * @return array
      */
-    private function getMaxContentWidths($spread = 0)
+    private function getMaxContentWidths()
     {
         // Initialize list with zero width
         $widths = array_fill(0, count($this->headers), 0);
@@ -190,7 +188,7 @@ class Table
         foreach ($rows as $row) {
             foreach ($row as $column => $columnContent) {
                 foreach ($this->getLines($columnContent) as $line) {
-                    $widths[$column] = max($widths[$column], strlen($line) + $spread);
+                    $widths[$column] = max($widths[$column], strlen($line));
                 }
             }
         }
@@ -219,7 +217,7 @@ class Table
         }
 
         // Get weighted content widths favoring smaller columns
-        $this->columnWidths = $this->getMaxContentWidths(30);
+        $this->columnWidths = $this->getWeightedContentWidths(10);
 
         // Sum of weighted content widths
         $maxWidthSum = array_sum($this->columnWidths);
@@ -231,6 +229,36 @@ class Table
         $remaining = $availableWidth;
         $this->resizeColumns($factor, $remaining);
         $this->distributeRemaining($remaining);
+    }
+
+    /**
+     * Gets average and weighted column widths.
+     *
+     * @param int $spread Increasing this will favor smaller columns.
+     *
+     * @return array
+     */
+    private function getWeightedContentWidths($spread = 0)
+    {
+        // Initialize empty lists for each column
+        $widthMap = array_fill(0, count($this->headers), array());
+
+        // Collect all line lengths per column
+        $rows = array_merge(array($this->headers), $this->rows);
+        foreach ($rows as $row) {
+            foreach ($row as $column => $columnContent) {
+                foreach ($this->getLines($columnContent) as $line) {
+                    $widthMap[$column][] = strlen($line);
+                }
+            }
+        }
+
+        // Calculate average widths and add spread
+        $widths = array();
+        foreach ($widthMap as $column => $widthList) {
+            $widths[$column] = (int)(array_sum($widthList) / count($widthList)) + $spread;
+        }
+        return $widths;
     }
 
     /**
