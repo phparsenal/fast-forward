@@ -11,6 +11,7 @@ if ($argc > 0) {
 }
 
 $client = new Client('fast-forward', Client::FF_VERSION);
+$client->init();
 try {
     $client->run();
 } catch (\Exception $e) {

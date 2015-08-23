@@ -31,7 +31,9 @@ class Run extends InteractiveCommand
             $match = $this->selectMatch($bookmarks, $input, $output);
         }
         if ($match === null) {
-            $this->addWhenEmpty($output);
+            if (!$this->addWhenEmpty($output)) {
+                $output->note("There are no bookmarks matching shortcut: '" . $shortcut . "'");
+            }
         } else {
             // Run the selected bookmark
             $match->run($this->getApplication(), $output);
@@ -103,6 +105,11 @@ class Run extends InteractiveCommand
         $output->table($headers, $rows);
     }
 
+    /**
+     * @param OutputStyle $output
+     * @return bool True when there are no bookmarks.
+     * @throws \Exception
+     */
     private function addWhenEmpty(OutputStyle $output)
     {
         if (Bookmark::select()->count() === 0) {
@@ -111,6 +118,8 @@ class Run extends InteractiveCommand
             $args = array('command' => 'help', 'command_name' => 'add');
             $argsInput = new ArrayInput($args);
             $addCommand->run($argsInput, $output);
+            return true;
         }
+        return false;
     }
 }

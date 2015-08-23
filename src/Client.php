@@ -48,12 +48,21 @@ class Client extends Application
     public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN')
     {
         parent::__construct($name, $version);
+    }
 
+    public function init(OutputInterface $output = null, $dbPath = null)
+    {
         $this->setDefaultCommand('run');
-        $this->output = new ConsoleStyle(new ArgvInput(), new ConsoleOutput());
+        if ($output === null) {
+            $output = new ConsoleOutput();
+        }
+        $this->output = new ConsoleStyle(new ArgvInput(), $output);
         $this->folder = dirname(dirname(__FILE__));
         chdir($this->folder);
-        DBA::connect('sqlite:' . $this->folder . '/db.sqlite', '', '');
+        if ($dbPath === null) {
+            $dbPath = $this->folder . '/db.sqlite';
+        }
+        DBA::connect('sqlite:' . $dbPath, '', '');
         $this->settings = new Settings($this);
 
         $migration = new Migration($this);
