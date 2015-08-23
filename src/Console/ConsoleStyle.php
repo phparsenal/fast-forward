@@ -55,8 +55,17 @@ class ConsoleStyle extends SymfonyStyle
     public function table(array $headers, array $rows)
     {
         $table = new Table($this);
+        $table->setTerminalWidth($this->getTerminalWidth());
         $table->setHeaders($headers);
         $table->addRows($rows);
         $table->render();
     }
+
+    private function getTerminalWidth()
+    {
+        $application = new \Symfony\Component\Console\Application();
+        $dimensions = $application->getTerminalDimensions();
+        return $dimensions[0] ?: 120;
+    }
+
 }

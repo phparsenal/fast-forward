@@ -5,12 +5,13 @@ namespace phparsenal\fastforward\Console;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Display a table with support for row wrapping.
+ * Display a table with multi-line rows and auto-sized columns.
  *
  * Example:
  *
  *     // Pass a Symfony\Component\Console\Output\OutputInterface
  *     $table = new Table($output);
+ *     $table->setTerminalWidth(120);
  *     $table->setHeaders(array('Author', 'Title'));
  *     $table->addRow(array('Stanislaw Lem', 'The Futurological Congress));
  *     $table->render();
@@ -28,6 +29,16 @@ class Table
      * @var array
      */
     private $rows = array();
+
+    /**
+     * @var array
+     */
+    private $maxColumnWidths;
+
+    /**
+     * @var array
+     */
+    private $columnWidths;
 
     /**
      * @var OutputInterface
@@ -53,11 +64,32 @@ class Table
     private $maxLines = 0;
 
     /**
+     * @var int
+     */
+    private $terminalWidth = 0;
+
+    /**
      * @param OutputInterface $output
      */
     public function __construct(OutputInterface $output)
     {
         $this->output = $output;
+    }
+
+    /**
+     * Set the maximum width of this table.
+     *
+     * When width is positive the rows will be resized and wrapped to fit.
+     * Otherwise rows will be as wide as they need to be.
+     *
+     * @param int $width
+     *
+     * @return $this
+     */
+    public function setTerminalWidth($width)
+    {
+        $this->terminalWidth = $width;
+        return $this;
     }
 
     /**
@@ -122,15 +154,21 @@ class Table
      */
     public function render()
     {
-        $maxWidths = $this->getMaxContentWidths();
-        $str = '';
-        $str .= $this->formatSeparator($maxWidths);
-        $str .= $this->formatRow($this->headers, $maxWidths);
-        foreach ($this->rows as $row) {
-            $str .= $this->formatSeparator($maxWidths);
-            $str .= $this->formatRow($row, $maxWidths);
+        if ($this->terminalWidth === 0) {
+            // No limit to line length
+            $this->columnWidths = $this->getMaxContentWidths();
+        } else {
+            $this->autoSizeContentWidths();
         }
-        $str .= $this->formatSeparator($maxWidths);
+
+        $str = '';
+        $str .= $this->formatSeparator($this->columnWidths);
+        $str .= $this->formatRow($this->headers, $this->columnWidths);
+        foreach ($this->rows as $row) {
+            $str .= $this->formatSeparator($this->columnWidths);
+            $str .= $this->formatRow($row, $this->columnWidths);
+        }
+        $str .= $this->formatSeparator($this->columnWidths);
         $this->output->writeln($str);
     }
 
@@ -138,8 +176,12 @@ class Table
      * Returns an array of maximum column widths.
      *
      * This will keep $maxLines in mind.
+     *
+     * @param int $spread
+     *
+     * @return array
      */
-    private function getMaxContentWidths()
+    private function getMaxContentWidths($spread = 0)
     {
         // Initialize list with zero width
         $widths = array_fill(0, count($this->headers), 0);
@@ -148,21 +190,117 @@ class Table
         foreach ($rows as $row) {
             foreach ($row as $column => $columnContent) {
                 foreach ($this->getLines($columnContent) as $line) {
-                    $widths[$column] = max($widths[$column], strlen($line));
+                    $widths[$column] = max($widths[$column], strlen($line) + $spread);
                 }
             }
         }
         return $widths;
     }
 
-    private function getLines($content)
+    private function autoSizeContentWidths()
+    {
+        // Format an empty row
+        $emptyRow = array_fill(0, count($this->headers), '');
+        $zeroWidth = array_fill(0, count($this->headers), 0);
+
+        // to get the amount of characters reserved for styling (excluding line feed)
+        $styleWidth = strlen($this->formatRow($emptyRow, $zeroWidth)) - 1;
+
+        // How much can be used for actual content
+        $availableWidth = $this->terminalWidth - $styleWidth;
+
+        // Maximum content width per column without wrapping
+        $this->maxColumnWidths = $this->getMaxContentWidths();
+
+        // Check if everything already fits.
+        if (array_sum($this->maxColumnWidths) <= $availableWidth) {
+            $this->columnWidths = $this->maxColumnWidths;
+            return;
+        }
+
+        // Get weighted content widths favoring smaller columns
+        $this->columnWidths = $this->getMaxContentWidths(30);
+
+        // Sum of weighted content widths
+        $maxWidthSum = array_sum($this->columnWidths);
+
+        // Factor to resize the columns
+        $factor = $availableWidth / $maxWidthSum;
+
+        // How many characters are left to spend
+        $remaining = $availableWidth;
+        $this->resizeColumns($factor, $remaining);
+        $this->distributeRemaining($remaining);
+    }
+
+    /**
+     * @param float $factor
+     * @param int   $remaining
+     *
+     * @return array
+     */
+    private function resizeColumns($factor, &$remaining)
+    {
+        foreach ($this->columnWidths as $key => $width) {
+            // Apply factor and round down to be safe
+            $newWidth = (int)($this->columnWidths[$key] * $factor);
+
+            // Use only as much as is needed
+            $newWidth = min($newWidth, $this->maxColumnWidths[$key]);
+            $this->columnWidths[$key] = $newWidth;
+            $remaining -= $newWidth;
+        }
+    }
+
+    /**
+     * @param int $remaining
+     */
+    private function distributeRemaining(&$remaining)
+    {
+        // There are characters to spare. Distribute them on smaller columns first.
+        $keys = $this->columnWidths;
+
+        // Sort the current widths maintaining their keys
+        asort($keys);
+
+        // Get column indexes sorted by their size
+        $keys = array_keys($keys);
+
+        $changing = true;
+        while ($changing && $remaining > 0) {
+            $changing = false;
+            for ($i = 0; $i < count($keys) && $remaining > 0; $i++) {
+                $key = $keys[$i];
+                // Only add when needed
+                if ($this->columnWidths[$key] < $this->maxColumnWidths[$key]) {
+                    $this->columnWidths[$key]++;
+                    $remaining--;
+                    $changing = true;
+                }
+            }
+        }
+    }
+
+    private function getLines($content, $wrap = 0)
     {
         $lines = explode(PHP_EOL, $content);
         $limit = count($lines);
         if ($this->maxLines !== 0) {
             $limit = min(count($lines), $this->maxLines);
         }
-        return array_slice($lines, 0, $limit);
+        $lines = array_slice($lines, 0, $limit);
+        if ($wrap > 0) {
+            $wrappedLines = array();
+            foreach ($lines as $line) {
+                if (strlen($line) > $wrap) {
+                    $wrappedLines = array_merge($wrappedLines, str_split($line, $wrap));
+                } else {
+                    $wrappedLines[] = $line;
+                }
+            }
+            $lines = $wrappedLines;
+        }
+        return $lines;
     }
 
     /**
@@ -197,7 +335,7 @@ class Table
         $columns = array();
         $maxLines = 0;
         foreach ($row as $column => $content) {
-            $lines = $this->getLines($content);
+            $lines = $this->getLines($content, $maxWidths[$column]);
             $maxLines = max($maxLines, count($lines));
             $columns[] = $lines;
         }
