@@ -68,7 +68,7 @@ class Bookmark extends Model
      */
     public function save()
     {
-        if ($this->ts_created == null) {
+        if ($this->ts_created === null) {
             $this->ts_created = time();
         }
         parent::save();

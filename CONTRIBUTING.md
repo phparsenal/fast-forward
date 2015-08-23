@@ -75,7 +75,6 @@ Where and how to report bugs.
     * What tags should the bug have?
     * Is this bug something you have run into? Would you appreciate it being looked into faster?
 * You can close fixed bugs by testing old tickets to see if they are still happening.
-* TODO ~~You can update our changelog here:~~
 * You can remove duplicate bug reports by mentioning it to any maintainers
 
 # Beta testing

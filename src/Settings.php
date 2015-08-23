@@ -169,7 +169,6 @@ class Settings
         $out = $this->client->getOutput();
         $out->section('Supported settings [default]');
 
-        $items = array();
         foreach ($settings as $key => $info) {
             $out->write($key);
             if (isset($currentSettings[$key])) {
