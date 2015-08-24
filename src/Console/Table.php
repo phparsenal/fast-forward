@@ -156,7 +156,7 @@ class Table
     {
         if ($this->terminalWidth === 0) {
             // No limit to line length
-            $this->columnWidths = $this->getMaxContentWidths();
+            $this->columnWidths = $this->getMaxColumnWidths();
         } else {
             $this->autoSizeContentWidths();
         }
@@ -173,24 +173,57 @@ class Table
     }
 
     /**
-     * Returns an array of maximum column widths.
+     * Get complete list of all widths of all columns.
      *
      * This will keep $maxLines in mind.
      *
      * @return array
      */
-    private function getMaxContentWidths()
+    private function getColumnWidths()
     {
-        // Initialize list with zero width
-        $widths = array_fill(0, count($this->headers), 0);
+        // Initialize empty lists for each column
+        $widths = array_fill(0, count($this->headers), array());
 
+        // Collect all line lengths per column
         $rows = array_merge(array($this->headers), $this->rows);
         foreach ($rows as $row) {
             foreach ($row as $column => $columnContent) {
+                // Split cell content into lines
                 foreach ($this->getLines($columnContent) as $line) {
-                    $widths[$column] = max($widths[$column], strlen($line));
+                    $widths[$column][] = strlen($line);
                 }
             }
+        }
+        return $widths;
+    }
+
+    /**
+     * Returns an array of maximum column widths.
+     *
+     * @return array
+     */
+    private function getMaxColumnWidths()
+    {
+        $maxWidths = array();
+        foreach ($this->getColumnWidths() as $column => $widthList) {
+            $maxWidths[$column] = max($widthList);
+        }
+        return $maxWidths;
+    }
+
+    /**
+     * Gets average and weighted column widths.
+     *
+     * @param int $spread Increasing this will favor smaller columns.
+     *
+     * @return array
+     */
+    private function getWeightedContentWidths($spread = 0)
+    {
+        // Calculate average widths and add spread
+        $widths = array();
+        foreach ($this->getColumnWidths() as $column => $widthList) {
+            $widths[$column] = (int)(array_sum($widthList) / count($widthList)) + $spread;
         }
         return $widths;
     }
@@ -208,7 +241,7 @@ class Table
         $availableWidth = $this->terminalWidth - $styleWidth;
 
         // Maximum content width per column without wrapping
-        $this->maxColumnWidths = $this->getMaxContentWidths();
+        $this->maxColumnWidths = $this->getMaxColumnWidths();
 
         // Check if everything already fits.
         if (array_sum($this->maxColumnWidths) <= $availableWidth) {
@@ -229,36 +262,6 @@ class Table
         $remaining = $availableWidth;
         $this->resizeColumns($factor, $remaining);
         $this->distributeRemaining($remaining);
-    }
-
-    /**
-     * Gets average and weighted column widths.
-     *
-     * @param int $spread Increasing this will favor smaller columns.
-     *
-     * @return array
-     */
-    private function getWeightedContentWidths($spread = 0)
-    {
-        // Initialize empty lists for each column
-        $widthMap = array_fill(0, count($this->headers), array());
-
-        // Collect all line lengths per column
-        $rows = array_merge(array($this->headers), $this->rows);
-        foreach ($rows as $row) {
-            foreach ($row as $column => $columnContent) {
-                foreach ($this->getLines($columnContent) as $line) {
-                    $widthMap[$column][] = strlen($line);
-                }
-            }
-        }
-
-        // Calculate average widths and add spread
-        $widths = array();
-        foreach ($widthMap as $column => $widthList) {
-            $widths[$column] = (int)(array_sum($widthList) / count($widthList)) + $spread;
-        }
-        return $widths;
     }
 
     /**
