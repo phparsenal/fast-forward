@@ -90,4 +90,17 @@ class InteractiveCommand extends Command
             $this->out = new ConsoleStyle($input, $output);
         }
     }
+
+    /**
+     * Returns data passed via stdin.
+     *
+     * @return string
+     */
+    protected function getStdin()
+    {
+        $h = fopen('php://stdin', 'r');
+        $data = stream_get_contents($h);
+        fclose($h);
+        return $data;
+    }
 }
