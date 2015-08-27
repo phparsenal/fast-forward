@@ -2,11 +2,14 @@
 
 namespace phparsenal\fastforward\Model;
 
+use NateDrake\DateHelper\DateFormat;
 use nochso\ORM\Model;
 use phparsenal\fastforward\Client;
+use phparsenal\fastforward\ConsoleStyle;
 use phparsenal\fastforward\OS;
 use phparsenal\fastforward\Settings;
 use Symfony\Component\Console\Style\OutputStyle;
+use Symfony\Component\Console\Style\StyleInterface;
 
 class Bookmark extends Model
 {
@@ -122,5 +125,46 @@ class Bookmark extends Model
             $this->limit($maxRows);
         }
         return $this;
+    }
+
+    public static function table(StyleInterface $out, $bookmarks)
+    {
+        $out->table(self::getTableHeaders(), self::getTableRows($bookmarks));
+    }
+
+    /**
+     * @return array
+     */
+    private static function getTableHeaders()
+    {
+        return array(
+            '#',
+            'Shortcut',
+            'Description',
+            'Command',
+            'Hits',
+            'Modified',
+        );
+    }
+
+    /**
+     * @param Bookmark[] $bookmarks
+     *
+     * @return array
+     */
+    private static function getTableRows($bookmarks)
+    {
+        $rows = array();
+        foreach ($bookmarks as $key => $bm) {
+            $rows[] = array(
+                $key,
+                $bm->shortcut,
+                $bm->description,
+                $bm->command,
+                $bm->hit_count,
+                $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG),
+            );
+        }
+        return $rows;
     }
 }
