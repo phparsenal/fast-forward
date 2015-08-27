@@ -2,7 +2,6 @@
 
 namespace phparsenal\fastforward\Command;
 
-use NateDrake\DateHelper\DateFormat;
 use phparsenal\fastforward\Model\Bookmark;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
@@ -67,39 +66,12 @@ class Run extends InteractiveCommand
         if (count($bookmarks) === 0) {
             return null;
         }
-        $this->listBookmarks($bookmarks);
+        Bookmark::table($this->out, $bookmarks);
         $answer = $this->out->ask('Enter # of command to run');
         if ($answer !== null && ctype_digit($answer) && $answer >= 0 && $answer < count($bookmarks)) {
             return $bookmarks[$answer];
         }
         return null;
-    }
-
-    /**
-     * @param Bookmark[] $bookmarks
-     */
-    private function listBookmarks($bookmarks)
-    {
-        $headers = array(
-            '#',
-            'Shortcut',
-            'Description',
-            'Command',
-            'Hits',
-            'Modified',
-        );
-        $rows = array();
-        foreach ($bookmarks as $key => $bm) {
-            $rows[] = array(
-                $key,
-                $bm->shortcut,
-                $bm->description,
-                $bm->command,
-                $bm->hit_count,
-                $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG),
-            );
-        }
-        $this->out->table($headers, $rows);
     }
 
     /**

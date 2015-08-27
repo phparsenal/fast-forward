@@ -46,7 +46,7 @@ class Set extends InteractiveCommand
             return;
         }
         if ($input->getOption('import-stdin')) {
-            $this->addLines($this->getLinesStdin(), $output);
+            $this->addLines($this->getStdin(), $output);
             return;
         }
         $key = $input->getArgument('key');
@@ -85,20 +85,6 @@ class Set extends InteractiveCommand
     }
 
     /**
-     * @return array
-     */
-    private function getLinesStdin()
-    {
-        $h = fopen('php://stdin', 'r');
-        $lines = array();
-        while (!feof($h)) {
-            $lines[] = fgets($h);
-        }
-        fclose($h);
-        return $lines;
-    }
-
-    /**
      * @param $filepath
      *
      * @return array
@@ -115,11 +101,14 @@ class Set extends InteractiveCommand
     }
 
     /**
-     * @param $lines
+     * @param string|array $lines
      * @param OutputInterface $output
      */
     private function addLines($lines, OutputInterface $output)
     {
+        if (!is_array($lines)) {
+            $lines = explode("\n", $lines);
+        }
         foreach ($lines as $line) {
             if (preg_match('/^([^ ]+) (.*)/', $line, $matches)) {
                 $this->getApplication()->setSetting($matches[1], $matches[2]);
