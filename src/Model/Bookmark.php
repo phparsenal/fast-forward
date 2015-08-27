@@ -5,7 +5,6 @@ namespace phparsenal\fastforward\Model;
 use NateDrake\DateHelper\DateFormat;
 use nochso\ORM\Model;
 use phparsenal\fastforward\Client;
-use phparsenal\fastforward\ConsoleStyle;
 use phparsenal\fastforward\OS;
 use phparsenal\fastforward\Settings;
 use Symfony\Component\Console\Style\OutputStyle;
@@ -67,10 +66,16 @@ class Bookmark extends Model
     #endregion
 
     /**
-     * Ensure ts_created is set
+     * @throws \Exception
      */
     public function save()
     {
+        if (strlen($this->shortcut) === 0) {
+            throw new \Exception('Shortcut must not be empty.');
+        }
+        if (strlen($this->command) === 0) {
+            throw new \Exception('Command must not be empty.');
+        }
         if ($this->ts_created === null) {
             $this->ts_created = time();
         }
@@ -127,14 +132,17 @@ class Bookmark extends Model
         return $this;
     }
 
-    public static function table(StyleInterface $out, $bookmarks)
+    /**
+     * @param StyleInterface $out
+     * @param Bookmark[]     $bookmarks
+     * @param array          $extra
+     */
+    public static function table(StyleInterface $out, $bookmarks, $extra = array())
     {
-        $out->table(self::getTableHeaders(), self::getTableRows($bookmarks));
+        $headers = array_merge(self::getTableHeaders(), $extra);
+        $out->table($headers, self::getTableRows($bookmarks, $extra));
     }
 
-    /**
-     * @return array
-     */
     private static function getTableHeaders()
     {
         return array(
@@ -149,14 +157,15 @@ class Bookmark extends Model
 
     /**
      * @param Bookmark[] $bookmarks
+     * @param array      $extra
      *
      * @return array
      */
-    private static function getTableRows($bookmarks)
+    private static function getTableRows($bookmarks, $extra = array())
     {
         $rows = array();
         foreach ($bookmarks as $key => $bm) {
-            $rows[] = array(
+            $row = array(
                 $key,
                 $bm->shortcut,
                 $bm->description,
@@ -164,6 +173,10 @@ class Bookmark extends Model
                 $bm->hit_count,
                 $bm->ts_modified === '' ? 'never' : DateFormat::epochDate($bm->ts_modified, DateFormat::BIG),
             );
+            foreach ($extra as $key) {
+                $row[] = $bm->extra($key);
+            }
+            $rows[] = $row;
         }
         return $rows;
     }

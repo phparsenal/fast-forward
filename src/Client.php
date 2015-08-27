@@ -5,6 +5,8 @@ namespace phparsenal\fastforward;
 use nochso\ORM\DBA\DBA;
 use phparsenal\fastforward\Command\Add;
 use phparsenal\fastforward\Command\Delete;
+use phparsenal\fastforward\Command\Export;
+use phparsenal\fastforward\Command\Import;
 use phparsenal\fastforward\Command\Run;
 use phparsenal\fastforward\Command\Set;
 use phparsenal\fastforward\Command\Update;
@@ -111,6 +113,8 @@ class Client extends Application
             new Delete(),
             new Set(),
             new Update(),
+            new Import(),
+            new Export(),
         );
         return array_merge(parent::getDefaultCommands(), $defaults);
     }
