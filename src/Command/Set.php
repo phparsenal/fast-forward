@@ -103,7 +103,7 @@ class Set extends InteractiveCommand
     }
 
     /**
-     * @param string|array $lines
+     * @param string|array    $lines
      * @param OutputInterface $output
      */
     private function addLines($lines, OutputInterface $output)

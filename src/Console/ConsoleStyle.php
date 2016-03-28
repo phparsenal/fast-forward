@@ -67,5 +67,4 @@ class ConsoleStyle extends SymfonyStyle
         $dimensions = $application->getTerminalDimensions();
         return $dimensions[0] ?: 120;
     }
-
 }
