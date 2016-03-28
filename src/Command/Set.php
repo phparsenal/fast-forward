@@ -64,7 +64,9 @@ class Set extends InteractiveCommand
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
+        // Do not ask interactively when these options are used
         if ($input->getOption('list')
+            || $input->getOption('default')
             || $input->getOption('import-stdin')
             || $input->getOption('import-file') !== null
         ) {
