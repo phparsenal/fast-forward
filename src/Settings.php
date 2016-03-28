@@ -4,7 +4,7 @@ namespace phparsenal\fastforward;
 
 use phparsenal\fastforward\Model\Bookmark;
 use phparsenal\fastforward\Model\Setting;
-use Respect\Validation\Exceptions\NestedValidationExceptionInterface;
+use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator as v;
 
 class Settings
@@ -27,7 +27,7 @@ class Settings
         $this->supportedSettings = array(
             'ff.limit' => array(
                 'desc' => 'Limit amount of results (> 0 or 0 for no limit)',
-                'validation' => array(v::int()->min(0, true)),
+                'validation' => array(v::intVal()->min(0, true)),
                 'default' => '0',
             ),
             'ff.sort' => array(
@@ -65,12 +65,12 @@ class Settings
     {
         $out = $this->client->getOutput();
         try {
-            v::string()
+            v::stringType()
                 ->alnum('.')
                 ->noWhitespace()
                 ->notEmpty()
                 ->assert($key);
-        } catch (NestedValidationExceptionInterface $e) {
+        } catch (NestedValidationException $e) {
             $out->error($e->getFullMessage());
             return;
         }
@@ -135,11 +135,11 @@ class Settings
         if (!isset($info['validation'])) {
             return true;
         }
-        /** @var Validator $validator */
+        /** @var v $validator */
         foreach ($info['validation'] as $validator) {
             try {
                 $validator->assert($setting->value);
-            } catch (NestedValidationExceptionInterface $exception) {
+            } catch (NestedValidationException $exception) {
                 $this->client->getOutput()->error($exception->getFullMessage());
                 return false;
             }
